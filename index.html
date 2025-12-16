@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>屋台配置図 管理デモアプリ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>屋台配置図 管理デモアプリ</h1>
+  <div id="app">
+    <svg id="map" width="540" height="520" viewBox="0 0 540 520" aria-label="屋台配置図">
+      <!-- Row 1 -->
+      <rect id="B01" class="booth" x="20" y="20" width="80" height="60"></rect>
+      <rect id="B02" class="booth" x="120" y="20" width="80" height="60"></rect>
+      <rect id="B03" class="booth" x="220" y="20" width="80" height="60"></rect>
+      <rect id="B04" class="booth" x="320" y="20" width="80" height="60"></rect>
+      <rect id="B05" class="booth" x="420" y="20" width="80" height="60"></rect>
+      <!-- Row 2 -->
+      <rect id="B06" class="booth" x="20" y="100" width="80" height="60"></rect>
+      <rect id="B07" class="booth" x="120" y="100" width="80" height="60"></rect>
+      <rect id="B08" class="booth" x="220" y="100" width="80" height="60"></rect>
+      <rect id="B09" class="booth" x="320" y="100" width="80" height="60"></rect>
+      <rect id="B10" class="booth" x="420" y="100" width="80" height="60"></rect>
+      <!-- Row 3 -->
+      <rect id="B11" class="booth" x="20" y="180" width="80" height="60"></rect>
+      <rect id="B12" class="booth" x="120" y="180" width="80" height="60"></rect>
+      <rect id="B13" class="booth" x="220" y="180" width="80" height="60"></rect>
+      <rect id="B14" class="booth" x="320" y="180" width="80" height="60"></rect>
+      <rect id="B15" class="booth" x="420" y="180" width="80" height="60"></rect>
+      <!-- Row 4 -->
+      <rect id="B16" class="booth" x="20" y="260" width="80" height="60"></rect>
+      <rect id="B17" class="booth" x="120" y="260" width="80" height="60"></rect>
+      <rect id="B18" class="booth" x="220" y="260" width="80" height="60"></rect>
+      <rect id="B19" class="booth" x="320" y="260" width="80" height="60"></rect>
+      <rect id="B20" class="booth" x="420" y="260" width="80" height="60"></rect>
+      <!-- Row 5 -->
+      <rect id="B21" class="booth" x="20" y="340" width="80" height="60"></rect>
+      <rect id="B22" class="booth" x="120" y="340" width="80" height="60"></rect>
+      <rect id="B23" class="booth" x="220" y="340" width="80" height="60"></rect>
+      <rect id="B24" class="booth" x="320" y="340" width="80" height="60"></rect>
+      <rect id="B25" class="booth" x="420" y="340" width="80" height="60"></rect>
+      <!-- Row 6 -->
+      <rect id="B26" class="booth" x="20" y="420" width="80" height="60"></rect>
+      <rect id="B27" class="booth" x="120" y="420" width="80" height="60"></rect>
+      <rect id="B28" class="booth" x="220" y="420" width="80" height="60"></rect>
+      <rect id="B29" class="booth" x="320" y="420" width="80" height="60"></rect>
+      <rect id="B30" class="booth" x="420" y="420" width="80" height="60"></rect>
+    </svg>
+
+    <aside id="panel">
+      <h2 id="booth-title">屋台を選択してください</h2>
+      <div class="field">
+        <label for="status">状態</label>
+        <select id="status">
+          <option value="normal">通常</option>
+          <option value="stop">停止</option>
+        </select>
+      </div>
+      <fieldset class="field checklist">
+        <legend>チェックリスト</legend>
+        <label><input type="checkbox" id="check-0"> 火気確認</label>
+        <label><input type="checkbox" id="check-1"> 衛生チェック</label>
+        <label><input type="checkbox" id="check-2"> 価格掲示</label>
+      </fieldset>
+      <div class="field">
+        <label for="price">価格</label>
+        <input type="number" id="price" placeholder="例: 500">
+      </div>
+      <div class="field">
+        <label for="person">責任者名</label>
+        <input type="text" id="person" placeholder="氏名を入力">
+      </div>
+      <button id="save-btn" disabled>保存</button>
+    </aside>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
