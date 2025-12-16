@@ -11,6 +11,7 @@ h1 {
   margin-bottom: 12px;
 }
 
+/* レイアウト */
 #app {
   display: flex;
   gap: 20px;
@@ -23,6 +24,7 @@ h1 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
+/* 屋台（SVG rect） */
 .booth {
   fill: #6fc46f;
   stroke: #555;
@@ -36,6 +38,7 @@ h1 {
   opacity: 0.95;
 }
 
+/* 右側パネル */
 #panel {
   width: 260px;
   background: #fafafa;
