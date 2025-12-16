@@ -80,6 +80,10 @@ function setupPanel() {
 
 function init() {
   createBooths();
+  // 初期表示で全屋台を通常色にセット
+  document.querySelectorAll(".booth").forEach((elem) => {
+    elem.setAttribute("fill", "#6fc46f");
+  });
   const loadBooth = setupPanel();
   bindBoothClicks(loadBooth);
   updateAllColors();
