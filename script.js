@@ -2,6 +2,7 @@
 const booths = {};
 // 現在パネルで編集している屋台ID
 let currentBoothId = null;
+const STORAGE_KEY = "yatai_demo_booths";
 
 // B01〜B30の初期データを生成
 function createBooths() {
@@ -13,6 +14,33 @@ function createBooths() {
       price: "",
       person: ""
     };
+  }
+}
+
+// ローカルストレージから状態を読み込む
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const parsed = JSON.parse(raw);
+    Object.keys(parsed).forEach((key) => {
+      if (booths[key]) {
+        booths[key] = parsed[key];
+      }
+    });
+    return true;
+  } catch (e) {
+    console.warn("Failed to load storage", e);
+    return false;
+  }
+}
+
+// ローカルストレージへ保存
+function saveToStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(booths));
+  } catch (e) {
+    console.warn("Failed to save storage", e);
   }
 }
 
@@ -57,13 +85,6 @@ function setupPanel() {
   const personInput = document.getElementById("person");
   const saveBtn = document.getElementById("save-btn");
 
-  // 状態変更を即時反映（保存前でも色を切り替える）
-  function applyStatusChange() {
-    if (!currentBoothId) return;
-    booths[currentBoothId].status = statusSelect.value;
-    updateBoothColor(currentBoothId);
-  }
-
   // 指定屋台の情報をパネルに読み込む
   function loadBooth(id) {
     currentBoothId = id;
@@ -78,10 +99,7 @@ function setupPanel() {
     saveBtn.disabled = false;
   }
 
-  // 状態プルダウンの変更で即時色更新
-  statusSelect.addEventListener("change", applyStatusChange);
-
-  // 保存ボタン：入力内容をデータに反映し色も更新
+  // 保存ボタン：入力内容をデータに反映し色も更新（保存操作をトリガーに変更が確定）
   saveBtn.addEventListener("click", () => {
     if (!currentBoothId) return;
     const data = booths[currentBoothId];
@@ -91,6 +109,7 @@ function setupPanel() {
     data.person = personInput.value;
 
     updateBoothColor(currentBoothId);
+    saveToStorage();
     alert(`${currentBoothId} を保存しました`);
   });
 
@@ -100,9 +119,15 @@ function setupPanel() {
 // ページ初期化処理
 function init() {
   createBooths();
-  // 初期表示で全屋台を通常色にセット
+  const hasStorage = loadFromStorage();
+  // 初期表示で全屋台を通常色にセット（保存データがあればそれを優先）
   document.querySelectorAll(".booth").forEach((elem) => {
-    elem.setAttribute("fill", "#6fc46f");
+    const id = elem.id;
+    if (!hasStorage) {
+      elem.setAttribute("fill", "#6fc46f");
+    } else {
+      updateBoothColor(id);
+    }
   });
   const loadBooth = setupPanel();
   bindBoothClicks(loadBooth);
