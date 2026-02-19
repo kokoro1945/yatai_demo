@@ -3,79 +3,163 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>屋台配置図 管理デモアプリ</title>
+  <title>屋台管理ダッシュボード</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>屋台配置図 管理デモアプリ</h1>
-  <div id="app">
-    <!-- 屋台配置図（SVGグリッド） -->
-    <svg id="map" width="540" height="520" viewBox="0 0 540 520" aria-label="屋台配置図">
-      <!-- Row 1 -->
-      <rect id="B01" class="booth" x="20" y="20" width="80" height="60"></rect>
-      <rect id="B02" class="booth" x="120" y="20" width="80" height="60"></rect>
-      <rect id="B03" class="booth" x="220" y="20" width="80" height="60"></rect>
-      <rect id="B04" class="booth" x="320" y="20" width="80" height="60"></rect>
-      <rect id="B05" class="booth" x="420" y="20" width="80" height="60"></rect>
-      <!-- Row 2 -->
-      <rect id="B06" class="booth" x="20" y="100" width="80" height="60"></rect>
-      <rect id="B07" class="booth" x="120" y="100" width="80" height="60"></rect>
-      <rect id="B08" class="booth" x="220" y="100" width="80" height="60"></rect>
-      <rect id="B09" class="booth" x="320" y="100" width="80" height="60"></rect>
-      <rect id="B10" class="booth" x="420" y="100" width="80" height="60"></rect>
-      <!-- Row 3 -->
-      <rect id="B11" class="booth" x="20" y="180" width="80" height="60"></rect>
-      <rect id="B12" class="booth" x="120" y="180" width="80" height="60"></rect>
-      <rect id="B13" class="booth" x="220" y="180" width="80" height="60"></rect>
-      <rect id="B14" class="booth" x="320" y="180" width="80" height="60"></rect>
-      <rect id="B15" class="booth" x="420" y="180" width="80" height="60"></rect>
-      <!-- Row 4 -->
-      <rect id="B16" class="booth" x="20" y="260" width="80" height="60"></rect>
-      <rect id="B17" class="booth" x="120" y="260" width="80" height="60"></rect>
-      <rect id="B18" class="booth" x="220" y="260" width="80" height="60"></rect>
-      <rect id="B19" class="booth" x="320" y="260" width="80" height="60"></rect>
-      <rect id="B20" class="booth" x="420" y="260" width="80" height="60"></rect>
-      <!-- Row 5 -->
-      <rect id="B21" class="booth" x="20" y="340" width="80" height="60"></rect>
-      <rect id="B22" class="booth" x="120" y="340" width="80" height="60"></rect>
-      <rect id="B23" class="booth" x="220" y="340" width="80" height="60"></rect>
-      <rect id="B24" class="booth" x="320" y="340" width="80" height="60"></rect>
-      <rect id="B25" class="booth" x="420" y="340" width="80" height="60"></rect>
-      <!-- Row 6 -->
-      <rect id="B26" class="booth" x="20" y="420" width="80" height="60"></rect>
-      <rect id="B27" class="booth" x="120" y="420" width="80" height="60"></rect>
-      <rect id="B28" class="booth" x="220" y="420" width="80" height="60"></rect>
-      <rect id="B29" class="booth" x="320" y="420" width="80" height="60"></rect>
-      <rect id="B30" class="booth" x="420" y="420" width="80" height="60"></rect>
-    </svg>
+  <div class="background-pattern" aria-hidden="true"></div>
+  <header class="hero">
+    <div class="hero__badge">大学祭・本部用</div>
+    <h1>屋台管理ダッシュボード</h1>
+    <p class="hero__lead">屋台情報を一元管理し、当日の状態をリアルタイムに共有。</p>
+    <div class="hero__meta">
+      <div class="meta-card">
+        <span class="meta-card__label">対象エリア</span>
+        <span class="meta-card__value" id="area-count">A / B / C</span>
+      </div>
+      <div class="meta-card">
+        <span class="meta-card__label">登録屋台数</span>
+        <span class="meta-card__value" id="total-count">--</span>
+      </div>
+      <div class="meta-card">
+        <span class="meta-card__label">更新</span>
+        <span class="meta-card__value" id="last-updated">--</span>
+      </div>
+    </div>
+  </header>
 
-    <!-- 屋台情報編集パネル -->
-    <aside id="panel">
-      <h2 id="booth-title">屋台を選択してください</h2>
-      <div class="field">
-        <label for="status">状態</label>
-        <select id="status">
-          <option value="normal">通常</option>
-          <option value="stop">停止</option>
-        </select>
+  <main class="dashboard">
+    <section class="panel panel--left">
+      <div class="panel__header">
+        <div>
+          <h2>屋台一覧</h2>
+          <p>状態に応じて色分けされます。</p>
+        </div>
+        <div class="panel__actions">
+          <label class="field field--inline">
+            <span>検索</span>
+            <input type="search" id="search" placeholder="屋台名・団体名・ID">
+          </label>
+          <label class="field field--inline">
+            <span>エリア</span>
+            <select id="area-filter">
+              <option value="all">全て</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
+          </label>
+        </div>
       </div>
-      <fieldset class="field checklist">
-        <legend>チェックリスト</legend>
-        <label><input type="checkbox" id="check-0"> 火気確認</label>
-        <label><input type="checkbox" id="check-1"> 衛生チェック</label>
-        <label><input type="checkbox" id="check-2"> 価格掲示</label>
-      </fieldset>
-      <div class="field">
-        <label for="price">価格</label>
-        <input type="number" id="price" placeholder="例: 500">
+
+      <div class="legend">
+        <div class="legend__item"><span class="dot dot--red"></span>販売停止</div>
+        <div class="legend__item"><span class="dot dot--orange"></span>警告2以上</div>
+        <div class="legend__item"><span class="dot dot--yellow"></span>警告1</div>
+        <div class="legend__item"><span class="dot dot--green"></span>正常</div>
+        <div class="legend__item"><span class="dot dot--gray"></span>確認未完了</div>
       </div>
-      <div class="field">
-        <label for="person">責任者名</label>
-        <input type="text" id="person" placeholder="氏名を入力">
+
+      <div class="grid" id="yatai-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="panel panel--right" id="detail-panel" aria-live="polite">
+      <div class="panel__header">
+        <div>
+          <h2>屋台詳細</h2>
+          <p id="detail-subtitle">屋台を選択してください</p>
+        </div>
+        <div class="status-chip" id="detail-status">--</div>
       </div>
-      <button id="save-btn" disabled>保存</button>
-    </aside>
-  </div>
+
+      <div class="detail" id="detail-content">
+        <div class="detail__block">
+          <h3>基本情報</h3>
+          <dl class="detail__list">
+            <div><dt>ID</dt><dd id="detail-id">--</dd></div>
+            <div><dt>エリア</dt><dd id="detail-area">--</dd></div>
+            <div><dt>団体名</dt><dd id="detail-org">--</dd></div>
+            <div><dt>屋台名</dt><dd id="detail-booth">--</dd></div>
+          </dl>
+        </div>
+
+        <div class="detail__block">
+          <h3>メニュー</h3>
+          <ul class="menu-list" id="detail-menu"></ul>
+        </div>
+
+        <div class="detail__block">
+          <h3>責任者</h3>
+          <dl class="detail__list">
+            <div><dt>氏名</dt><dd id="detail-leader">--</dd></div>
+            <div><dt>連絡先</dt><dd id="detail-phone">--</dd></div>
+          </dl>
+        </div>
+
+        <div class="detail__block">
+          <h3>当日ステータス</h3>
+          <dl class="detail__list">
+            <div><dt>警告</dt><dd id="detail-warn">--</dd></div>
+            <div><dt>検食</dt><dd id="detail-kenshoku">--</dd></div>
+            <div><dt>ガス</dt><dd id="detail-gas">--</dd></div>
+            <div><dt>販売可否</dt><dd id="detail-sales">--</dd></div>
+            <div><dt>メモ</dt><dd id="detail-memo">--</dd></div>
+            <div><dt>更新</dt><dd id="detail-updated">--</dd></div>
+          </dl>
+        </div>
+
+        <div class="detail__block admin" id="admin-section">
+          <h3>本部編集</h3>
+          <p class="hint">トークンが一致した場合のみ編集できます。</p>
+          <div class="field">
+            <label for="admin-token">編集トークン</label>
+            <input type="password" id="admin-token" placeholder="ADMIN_EDIT_TOKEN">
+          </div>
+
+          <form id="admin-form" class="admin-form" hidden>
+            <div class="field">
+              <label for="warn-count">警告数</label>
+              <input type="number" id="warn-count" min="0" max="5" step="1">
+            </div>
+            <div class="field">
+              <label for="kenshoku">検食</label>
+              <select id="kenshoku">
+                <option value="1">完了</option>
+                <option value="0">未完了</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="gas-check">ガス確認</label>
+              <select id="gas-check">
+                <option value="1">完了</option>
+                <option value="0">未完了</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="sales-allowed">販売可否</label>
+              <select id="sales-allowed">
+                <option value="1">販売可</option>
+                <option value="0">販売停止</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="memo">本日メモ</label>
+              <textarea id="memo" rows="3" placeholder="巡回メモ"></textarea>
+            </div>
+            <div class="field">
+              <label for="updated-by">更新者</label>
+              <input type="text" id="updated-by" placeholder="本部担当者名">
+            </div>
+            <button type="submit" class="btn">更新を保存</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Repository パターンにより API / DB を差し替え可能な構成を想定しています。</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
