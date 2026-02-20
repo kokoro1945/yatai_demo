@@ -204,6 +204,8 @@ body {
   position: relative;
   height: 75vh;
   max-height: 75vh;
+  width: 75vw;
+  max-width: 75vw;
   background: #fffdf8;
   border-radius: 18px;
   border: 1px solid rgba(30, 26, 18, 0.12);
