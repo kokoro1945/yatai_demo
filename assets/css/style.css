@@ -207,19 +207,21 @@ body {
   border-radius: 18px;
   border: 1px solid rgba(30, 26, 18, 0.12);
   padding: 16px;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .map-canvas {
   position: relative;
   display: grid;
-  --cell-size: 44px;
+  --cell-size: 56px;
   grid-template-rows: repeat(var(--rows), var(--cell-size));
   grid-template-columns: repeat(var(--cols), var(--cell-size));
   gap: 0;
   padding: 8px;
   min-width: calc(var(--cols) * var(--cell-size));
   min-height: calc(var(--rows) * var(--cell-size));
+  width: max-content;
 }
 
 .area-section {
@@ -425,7 +427,7 @@ body {
     min-height: auto;
   }
   .map-canvas {
-    --cell-size: 36px;
+    --cell-size: 44px;
   }
   .area-section {
     position: static !important;
