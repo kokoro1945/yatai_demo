@@ -1136,6 +1136,36 @@ const elements = {
   updatedBy: document.getElementById("updated-by")
 };
 
+const detailElements = [
+  "detailSubtitle",
+  "detailStatus",
+  "detailId",
+  "detailArea",
+  "detailOrg",
+  "detailBooth",
+  "detailMenu",
+  "detailLeader",
+  "detailPhone",
+  "detailWarn",
+  "detailKenshoku",
+  "detailGas",
+  "detailSales",
+  "detailMemo",
+  "detailUpdated",
+  "adminToken",
+  "adminForm",
+  "warnCount",
+  "kenshoku",
+  "gasCheck",
+  "salesAllowed",
+  "memo",
+  "updatedBy"
+];
+
+function hasDetailPanel() {
+  return detailElements.every((key) => elements[key]);
+}
+
 function loadStatusStore() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return;
@@ -1238,6 +1268,7 @@ function renderMap() {
   elements.canvas.innerHTML = "";
   const campus = CAMPUS_LAYOUTS[currentCampus];
   elements.canvas.style.height = `${campus.height}px`;
+  elements.canvas.style.width = `${campus.width}px`;
   elements.map.style.minHeight = `${campus.height + 32}px`;
 
   Object.entries(campus.areas).forEach(([area, config]) => {
@@ -1320,6 +1351,10 @@ function selectYatai(id) {
   currentId = id;
   const item = yataiMaster.find((yatai) => yatai.yatai_id === id);
   if (!item) return;
+  if (!hasDetailPanel()) {
+    renderMap();
+    return;
+  }
   const status = getStatus(id);
   elements.detailSubtitle.textContent = `${item.booth_name} (${item.yatai_id})`;
   elements.detailStatus.textContent = getStatusLabel(status);
@@ -1394,8 +1429,12 @@ function init() {
   elements.search.addEventListener("input", renderMap);
   elements.areaFilter.addEventListener("change", renderMap);
   elements.statusFilter.addEventListener("change", renderMap);
-  elements.adminToken.addEventListener("input", handleAdminToken);
-  elements.adminForm.addEventListener("submit", handleAdminSubmit);
+  if (elements.adminToken) {
+    elements.adminToken.addEventListener("input", handleAdminToken);
+  }
+  if (elements.adminForm) {
+    elements.adminForm.addEventListener("submit", handleAdminSubmit);
+  }
 
   elements.tabHon.addEventListener("click", () => setCampus("hon"));
   elements.tabE.addEventListener("click", () => setCampus("e"));
