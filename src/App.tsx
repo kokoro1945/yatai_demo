@@ -66,6 +66,15 @@ const mergeStatusRow = (prev: Record<string, BoothStatus>, row: BoothStatusRow |
   };
 };
 
+const statusLabel = (status?: BoothStatus) => {
+  if (!status) return "未登録";
+  if (!status.sales_allowed) return "販売停止";
+  if (status.warn_count >= 2) return "警告2以上";
+  if (status.warn_count === 1) return "警告1";
+  if (!status.gas_check || !status.kenshoku) return "確認未完了";
+  return "正常";
+};
+
 function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -123,6 +132,12 @@ function App() {
       unsubscribeFromStatus();
     };
   }, []);
+
+  useEffect(() => {
+    if (!selectedId && booths.length > 0) {
+      setSelectedId(booths[0].yatai_id);
+    }
+  }, [booths, selectedId]);
 
   let statusChannel: ReturnType<typeof supabase.channel> | null = null;
 
@@ -244,6 +259,9 @@ function App() {
     await supabase.auth.signOut();
   };
 
+  const selectedBooth = booths.find((booth) => booth.yatai_id === selectedId) ?? null;
+  const selectedStatus = selectedId ? statuses[selectedId] : undefined;
+
   if (loading) {
     return (
       <div className="app">
@@ -355,13 +373,59 @@ function App() {
         {dataError && <div className="error">{dataError}</div>}
 
         {!dataLoading && !dataError && booths.length > 0 && (
-          <BoothMap
-            campus={campus}
-            booths={booths}
-            statuses={statuses}
-            selectedId={selectedId}
-            onSelect={(id) => setSelectedId(id)}
-          />
+          <div className="map-layout">
+            <BoothMap
+              campus={campus}
+              booths={booths}
+              statuses={statuses}
+              selectedId={selectedId}
+              onSelect={(id) => setSelectedId(id)}
+            />
+            <div className="detail">
+              <div className="detail__header">
+                <div>
+                  <h3>屋台詳細</h3>
+                  <p className="muted">{selectedBooth?.booth_name ?? "未選択"}</p>
+                </div>
+                <span className="status-chip">{statusLabel(selectedStatus)}</span>
+              </div>
+              <div className="detail__body">
+                <div className="detail__row">
+                  <span className="label">屋台番号</span>
+                  <span>{selectedBooth?.yatai_id ?? "--"}</span>
+                </div>
+                <div className="detail__row">
+                  <span className="label">エリア</span>
+                  <span>{selectedBooth?.area ?? "--"}</span>
+                </div>
+                <div className="detail__row">
+                  <span className="label">団体名</span>
+                  <span>{selectedBooth?.org_name ?? "--"}</span>
+                </div>
+                <div className="detail__row">
+                  <span className="label">警告</span>
+                  <span>{selectedStatus?.warn_count ?? 0}件</span>
+                </div>
+                <div className="detail__row">
+                  <span className="label">検食</span>
+                  <span>{selectedStatus?.kenshoku ? "完了" : "未完了"}</span>
+                </div>
+                <div className="detail__row">
+                  <span className="label">ガス</span>
+                  <span>{selectedStatus?.gas_check ? "完了" : "未完了"}</span>
+                </div>
+                <div className="detail__row">
+                  <span className="label">販売可否</span>
+                  <span>{selectedStatus?.sales_allowed ? "販売可" : "販売停止"}</span>
+                </div>
+              </div>
+              <div className="detail__footer">
+                <button type="button" disabled>
+                  停止/解除（次ステップ）
+                </button>
+              </div>
+            </div>
+          </div>
         )}
 
         {!dataLoading && !dataError && booths.length === 0 && (
