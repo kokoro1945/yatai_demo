@@ -2,18 +2,18 @@ const ADMIN_EDIT_TOKEN = "ADMIN_EDIT_TOKEN";
 const STORAGE_KEY = "yatai_dashboard_status";
 
 const LAYOUT = {
-  A: { direction: "row", ids: ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"] },
-  B: { direction: "col", ids: ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10"] },
-  C: { direction: "col", ids: ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10"] },
-  D: { direction: "row", ids: ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10"] },
-  E: { direction: "row", ids: ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10", "E11", "E12", "E13"] },
-  F: { direction: "row", ids: ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"] },
-  G: { direction: "col", ids: ["G1", "G2", "G3", "G4", "G5", "G6"] },
-  H: { direction: "col", ids: ["H1", "H2", "H3", "H4", "H5"] },
-  I: { direction: "col", ids: ["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9"] },
-  J: { direction: "row", ids: ["J1", "J2", "J3", "J4", "J5"] },
-  K: { direction: "row", ids: ["K1", "K2", "K3", "K4", "K5", "K6", "K7", "K8", "K9", "K10", "K11", "K12"] },
-  L: { direction: "row", ids: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10", "L11", "L12", "L13", "L14", "L15"] }
+  A: { direction: "row", ids: ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"], x: 4, y: 4, width: 440 },
+  B: { direction: "col", ids: ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10"], x: 4, y: 130, width: 140 },
+  C: { direction: "col", ids: ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10"], x: 4, y: 300, width: 140 },
+  D: { direction: "row", ids: ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10"], x: 170, y: 330, width: 420 },
+  E: { direction: "row", ids: ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10", "E11", "E12", "E13"], x: 260, y: 220, width: 420 },
+  F: { direction: "row", ids: ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"], x: 420, y: 260, width: 380 },
+  G: { direction: "col", ids: ["G1", "G2", "G3", "G4", "G5", "G6"], x: 520, y: 360, width: 140 },
+  H: { direction: "col", ids: ["H1", "H2", "H3", "H4", "H5"], x: 360, y: 150, width: 140 },
+  I: { direction: "col", ids: ["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9"], x: 640, y: 360, width: 140 },
+  J: { direction: "row", ids: ["J1", "J2", "J3", "J4", "J5"], x: 500, y: 120, width: 260 },
+  K: { direction: "row", ids: ["K1", "K2", "K3", "K4", "K5", "K6", "K7", "K8", "K9", "K10", "K11", "K12"], x: 620, y: 140, width: 360 },
+  L: { direction: "row", ids: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10", "L11", "L12", "L13", "L14", "L15"], x: 560, y: 10, width: 420 }
 };
 
 const yataiMaster = [
@@ -1087,6 +1087,7 @@ let currentId = null;
 
 const elements = {
   map: document.getElementById("booth-map"),
+  canvas: document.getElementById("map-canvas"),
   search: document.getElementById("search"),
   areaFilter: document.getElementById("area-filter"),
   statusFilter: document.getElementById("status-filter"),
@@ -1215,12 +1216,14 @@ function matchesFilters(item, status) {
 }
 
 function renderMap() {
-  elements.map.innerHTML = "";
+  elements.canvas.innerHTML = "";
 
   Object.entries(LAYOUT).forEach(([area, config]) => {
     const section = document.createElement("section");
     section.className = "area-section";
-    section.style.gridArea = area.toLowerCase();
+    section.style.left = `${config.x}px`;
+    section.style.top = `${config.y}px`;
+    section.style.width = `${config.width}px`;
 
     const header = document.createElement("div");
     header.className = "area-header";
@@ -1269,7 +1272,7 @@ function renderMap() {
       section.style.display = "none";
     }
 
-    elements.map.appendChild(section);
+    elements.canvas.appendChild(section);
   });
 
   const visibleCount = yataiMaster.filter((item) => matchesFilters(item, getStatus(item.yatai_id))).length;

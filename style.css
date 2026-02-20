@@ -177,14 +177,19 @@ body {
 .dot--gray { background: var(--gray); }
 
 .booth-map {
-  display: grid;
-  gap: 18px;
-  grid-template-columns: repeat(6, minmax(120px, 1fr));
-  grid-template-areas:
-    "a a l l l l"
-    "b b h j k k"
-    "c d e f g i";
-  grid-auto-rows: minmax(120px, auto);
+  position: relative;
+  min-height: 520px;
+  background: #fffdf8;
+  border-radius: 18px;
+  border: 1px solid rgba(30, 26, 18, 0.12);
+  padding: 16px;
+  overflow: hidden;
+}
+
+.map-canvas {
+  position: relative;
+  width: 100%;
+  height: 520px;
 }
 
 .area-section {
@@ -193,6 +198,8 @@ body {
   padding: 12px 14px;
   border: 1px solid rgba(30, 26, 18, 0.08);
   min-width: 0;
+  position: absolute;
+  backdrop-filter: blur(2px);
 }
 
 .area-header {
@@ -219,8 +226,8 @@ body {
 }
 
 .tile {
-  min-width: 120px;
-  min-height: 70px;
+  width: 96px;
+  min-height: 64px;
   padding: 10px 12px;
   border-radius: 12px;
   background: #fff;
@@ -385,8 +392,14 @@ body {
     grid-template-columns: 1fr;
   }
   .booth-map {
-    grid-template-columns: 1fr;
-    grid-template-areas: none;
+    min-height: auto;
+  }
+  .map-canvas {
+    height: auto;
+  }
+  .area-section {
+    position: static;
+    margin-bottom: 12px;
   }
 }
 
