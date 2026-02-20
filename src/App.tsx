@@ -1,35 +1,321 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useMemo, useState } from "react";
+import { supabase } from "./lib/supabase";
+import { BoothMap } from "./components/BoothMap";
+import { StatusLegend } from "./components/StatusLegend";
+import { CAMPUS_LAYOUTS } from "./data/layout";
+import type { Booth, BoothStatus } from "./types";
+import "./App.css";
+
+const ROLE_LABELS: Record<string, string> = {
+  ADMIN: "本部（ADMIN）",
+  LEAD: "巡回リーダー（LEAD）",
+  PATROL: "巡回（PATROL）"
+};
+
+type Profile = {
+  id: string;
+  role: string | null;
+  area: string | null;
+};
+
+type BoothRow = {
+  yatai_id: string;
+  area: string | null;
+  booth_no: number | null;
+  booth_name: string | null;
+  org_name: string | null;
+  sponsor_flag: boolean | null;
+};
+
+type BoothStatusRow = {
+  yatai_id: string;
+  warn_count: number | null;
+  kenshoku: boolean | null;
+  gas_check: boolean | null;
+  sales_allowed: boolean | null;
+};
+
+const normalizeId = (id: string) => id.replace(/([A-Z])0+(\d+)/, "$1$2");
+
+const createDefaultStatuses = (booths: Booth[]) => {
+  const statuses: Record<string, BoothStatus> = {};
+  booths.forEach((booth) => {
+    statuses[booth.yatai_id] = {
+      yatai_id: booth.yatai_id,
+      warn_count: 0,
+      kenshoku: true,
+      gas_check: true,
+      sales_allowed: true
+    };
+  });
+  return statuses;
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [dataError, setDataError] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [campus, setCampus] = useState<"hon" | "e">("hon");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [booths, setBooths] = useState<Booth[]>([]);
+  const [statuses, setStatuses] = useState<Record<string, BoothStatus>>({});
+  const [dataLoading, setDataLoading] = useState(false);
+
+  const roleLabel = useMemo(() => {
+    if (!profile?.role) return "未設定";
+    return ROLE_LABELS[profile.role] ?? profile.role;
+  }, [profile]);
+
+  const campusAreas = CAMPUS_LAYOUTS[campus].areas.join(" / ");
+
+  useEffect(() => {
+    const init = async () => {
+      const { data } = await supabase.auth.getSession();
+      const session = data.session;
+      setUserId(session?.user.id ?? null);
+      if (session?.user.id) {
+        await fetchProfile(session.user.id);
+        await fetchBoothData();
+      }
+      setLoading(false);
+    };
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        setUserId(session?.user.id ?? null);
+        if (session?.user.id) {
+          await fetchProfile(session.user.id);
+          await fetchBoothData();
+        } else {
+          setProfile(null);
+          setBooths([]);
+          setStatuses({});
+        }
+      }
+    );
+
+    init();
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  const fetchProfile = async (id: string) => {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("id, role, area")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (error) {
+      setAuthError(`profiles 取得エラー: ${error.message}`);
+      setProfile(null);
+      return;
+    }
+
+    setProfile(data ?? null);
+  };
+
+  const fetchBoothData = async () => {
+    setDataLoading(true);
+    setDataError(null);
+
+    const { data: boothRows, error: boothError } = await supabase
+      .from("booths")
+      .select("yatai_id, area, booth_no, booth_name, org_name, sponsor_flag")
+      .order("booth_no", { ascending: true });
+
+    if (boothError) {
+      setDataError(`booths 取得エラー: ${boothError.message}`);
+      setDataLoading(false);
+      return;
+    }
+
+    const normalizedBooths: Booth[] = (boothRows as BoothRow[]).map((row) => ({
+      yatai_id: normalizeId(row.yatai_id),
+      area: row.area ?? "",
+      booth_no: row.booth_no ?? undefined,
+      booth_name: row.booth_name ?? "未登録",
+      org_name: row.org_name ?? undefined,
+      sponsor_flag: row.sponsor_flag ?? undefined
+    }));
+
+    const { data: statusRows, error: statusError } = await supabase
+      .from("booth_status")
+      .select("yatai_id, warn_count, kenshoku, gas_check, sales_allowed");
+
+    if (statusError) {
+      setDataError(`booth_status 取得エラー: ${statusError.message}`);
+      setDataLoading(false);
+      return;
+    }
+
+    const statusMap: Record<string, BoothStatus> = createDefaultStatuses(normalizedBooths);
+    (statusRows as BoothStatusRow[]).forEach((row) => {
+      const id = normalizeId(row.yatai_id);
+      statusMap[id] = {
+        yatai_id: id,
+        warn_count: row.warn_count ?? 0,
+        kenshoku: row.kenshoku ?? false,
+        gas_check: row.gas_check ?? false,
+        sales_allowed: row.sales_allowed ?? false
+      };
+    });
+
+    setBooths(normalizedBooths);
+    setStatuses(statusMap);
+    setDataLoading(false);
+  };
+
+  const handleSignIn = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setAuthError(null);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      setAuthError(error.message);
+    }
+  };
+
+  const handleSignOut = async () => {
+    setAuthError(null);
+    await supabase.auth.signOut();
+  };
+
+  if (loading) {
+    return (
+      <div className="app">
+        <div className="card">
+          <h1>屋台部ダッシュボード</h1>
+          <p>読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userId) {
+    return (
+      <div className="app">
+        <div className="card">
+          <h1>屋台部ダッシュボード</h1>
+          <p className="muted">ログインが必要です。</p>
+          <form onSubmit={handleSignIn} className="form">
+            <label className="field">
+              <span>Email</span>
+              <input
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="example@example.com"
+                required
+              />
+            </label>
+            <label className="field">
+              <span>Password</span>
+              <input
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="********"
+                required
+              />
+            </label>
+            {authError && <div className="error">{authError}</div>}
+            <button type="submit">ログイン</button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="app dashboard">
+      <header className="header">
+        <div>
+          <h1>屋台部ダッシュボード</h1>
+          <p className="muted">ログイン済み</p>
+        </div>
+        <button type="button" onClick={handleSignOut}>
+          ログアウト
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      </header>
+
+      <section className="panel">
+        <h2>ユーザー情報</h2>
+        <div className="profile">
+          <div>
+            <span className="label">ユーザーID</span>
+            <span>{userId}</span>
+          </div>
+          <div>
+            <span className="label">ロール</span>
+            <span>{roleLabel}</span>
+          </div>
+          <div>
+            <span className="label">担当エリア</span>
+            <span>{profile?.area ?? "未設定"}</span>
+          </div>
+        </div>
+        {authError && <div className="error">{authError}</div>}
+      </section>
+
+      <section className="panel">
+        <div className="panel__header">
+          <div>
+            <h2>屋台マップ</h2>
+            <p className="muted">対象エリア: {campusAreas}</p>
+          </div>
+          <div className="campus-tabs" role="tablist" aria-label="キャンパス切替">
+            <button
+              className={`tab ${campus === "hon" ? "is-active" : ""}`}
+              type="button"
+              role="tab"
+              aria-selected={campus === "hon"}
+              onClick={() => setCampus("hon")}
+            >
+              本キャン
+            </button>
+            <button
+              className={`tab ${campus === "e" ? "is-active" : ""}`}
+              type="button"
+              role="tab"
+              aria-selected={campus === "e"}
+              onClick={() => setCampus("e")}
+            >
+              Eキャン
+            </button>
+          </div>
+        </div>
+
+        <StatusLegend />
+
+        {dataLoading && <p className="muted">屋台データを取得中...</p>}
+        {dataError && <div className="error">{dataError}</div>}
+
+        {!dataLoading && !dataError && booths.length > 0 && (
+          <BoothMap
+            campus={campus}
+            booths={booths}
+            statuses={statuses}
+            selectedId={selectedId}
+            onSelect={(id) => setSelectedId(id)}
+          />
+        )}
+
+        {!dataLoading && !dataError && booths.length === 0 && (
+          <p className="muted">屋台データがありません。</p>
+        )}
+      </section>
+    </div>
+  );
 }
 
-export default App
+export default App;
