@@ -1,34 +1,69 @@
 const ADMIN_EDIT_TOKEN = "ADMIN_EDIT_TOKEN";
 const STORAGE_KEY = "yatai_dashboard_status";
 
+const GRID_ROWS = 12;
+const GRID_COLS = 37;
+const ROWS = "abcdefghijkl";
+
 const CAMPUS_LAYOUTS = {
   hon: {
     name: "本キャン",
-    width: 820,
-    height: 320,
-    areas: {
-      A: { direction: "row", ids: ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"], x: 120, y: 10, width: 560 },
-      B: { direction: "col", ids: ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10"], x: 120, y: 90, width: 120 },
-      C: { direction: "col", ids: ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10"], x: 10, y: 10, width: 120 },
-      D: { direction: "row", ids: ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10"], x: 120, y: 190, width: 680 }
-    }
+    areas: ["A", "B", "C", "D", "E", "F"],
+    placements: buildPlacements([
+      { start: "a3", end: "a12", ids: rangeIds("A", 1, 10) },
+      { start: "a2", end: "j2", ids: rangeIds("B", 1, 10) },
+      { start: "a1", end: "j1", ids: rangeIds("C", 1, 10) },
+      { start: "j3", end: "j12", ids: rangeIds("D", 1, 10) },
+      { start: "j13", end: "j25", ids: rangeIds("E", 1, 13) },
+      { start: "j26", end: "j37", ids: rangeIds("F", 1, 12) }
+    ])
   },
   e: {
     name: "Eキャン",
-    width: 900,
-    height: 360,
-    areas: {
-      L: { direction: "row", ids: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10", "L11", "L12", "L13", "L14", "L15"], x: 200, y: 10, width: 640 },
-      I: { direction: "col", ids: ["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9"], x: 200, y: 90, width: 120 },
-      F: { direction: "row", ids: ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"], x: 320, y: 140, width: 520 },
-      E: { direction: "row", ids: ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10", "E11", "E12", "E13"], x: 320, y: 210, width: 560 },
-      H: { direction: "row", ids: ["H1", "H2", "H3", "H4", "H5"], x: 40, y: 230, width: 220 },
-      G: { direction: "row", ids: ["G1", "G2", "G3", "G4", "G5", "G6"], x: 40, y: 280, width: 260 },
-      J: { direction: "row", ids: ["J1", "J2", "J3", "J4", "J5"], x: 520, y: 80, width: 260 },
-      K: { direction: "row", ids: ["K1", "K2", "K3", "K4", "K5", "K6", "K7", "K8", "K9", "K10", "K11", "K12"], x: 580, y: 110, width: 320 }
-    }
+    areas: ["G", "H", "I", "J", "K", "L"],
+    placements: buildPlacements([
+      { start: "l1", end: "l6", ids: rangeIds("G", 1, 6) },
+      { start: "k1", end: "k5", ids: rangeIds("H", 1, 5) },
+      { start: "l7", end: "l15", ids: rangeIds("I", 1, 9) },
+      { start: "k15", end: "g15", ids: rangeIds("J", 1, 5) },
+      { start: "l16", end: "a16", ids: rangeIds("K", 1, 12) },
+      { start: "a17", end: "a31", ids: rangeIds("L", 1, 15) }
+    ])
   }
 };
+
+function rangeIds(prefix, start, end) {
+  const ids = [];
+  for (let i = start; i <= end; i += 1) {
+    ids.push(`${prefix}${i}`);
+  }
+  return ids;
+}
+
+function parseCell(cell) {
+  const rowChar = cell[0].toLowerCase();
+  const col = Number(cell.slice(1));
+  const row = ROWS.indexOf(rowChar) + 1;
+  return { row, col };
+}
+
+function buildPlacements(ranges) {
+  const placements = [];
+  ranges.forEach(({ start, end, ids }) => {
+    const s = parseCell(start);
+    const e = parseCell(end);
+    const rowStep = s.row === e.row ? 0 : s.row < e.row ? 1 : -1;
+    const colStep = s.col === e.col ? 0 : s.col < e.col ? 1 : -1;
+    let row = s.row;
+    let col = s.col;
+    ids.forEach((id) => {
+      placements.push({ id, row, col });
+      if (rowStep !== 0) row += rowStep;
+      if (colStep !== 0) col += colStep;
+    });
+  });
+  return placements;
+}
 
 const yataiMaster = [
   {
@@ -1249,7 +1284,7 @@ function matchesFilters(item, status) {
   const keyword = elements.search.value.trim().toLowerCase();
   const area = elements.areaFilter.value;
   const statusFilter = elements.statusFilter.value;
-  const campusAreas = Object.keys(CAMPUS_LAYOUTS[currentCampus].areas);
+  const campusAreas = CAMPUS_LAYOUTS[currentCampus].areas;
 
   const inCampus = campusAreas.includes(item.area);
   const matchesArea = area === "all" || item.area === area;
@@ -1267,68 +1302,45 @@ function matchesFilters(item, status) {
 function renderMap() {
   elements.canvas.innerHTML = "";
   const campus = CAMPUS_LAYOUTS[currentCampus];
-  elements.canvas.style.height = `${campus.height}px`;
-  elements.canvas.style.width = `${campus.width}px`;
-  elements.map.style.minHeight = `${campus.height + 32}px`;
+  elements.canvas.style.setProperty("--rows", GRID_ROWS);
+  elements.canvas.style.setProperty("--cols", GRID_COLS);
 
-  Object.entries(campus.areas).forEach(([area, config]) => {
-    const section = document.createElement("section");
-    section.className = "area-section";
-    section.style.left = `${config.x}px`;
-    section.style.top = `${config.y}px`;
-    section.style.width = `${config.width}px`;
+  campus.placements.forEach((placement, index) => {
+    const item = yataiMaster.find((yatai) => yatai.yatai_id === placement.id);
+    const status = item ? getStatus(placement.id) : null;
+    const tile = document.createElement("div");
+    tile.className = `tile tile--${getStatusClass(status)}`;
+    tile.style.animationDelay = `${index * 0.01}s`;
+    tile.style.gridRow = placement.row;
+    tile.style.gridColumn = placement.col;
 
-    const header = document.createElement("div");
-    header.className = "area-header";
-    header.innerHTML = `<span>${area} エリア</span><span>${config.ids.length}ブロック</span>`;
-
-    const track = document.createElement("div");
-    track.className = `area-track area-track--${config.direction}`;
-
-    config.ids.forEach((id, index) => {
-      const item = yataiMaster.find((yatai) => yatai.yatai_id === id);
-      const status = item ? getStatus(id) : null;
-      const tile = document.createElement("div");
-      tile.className = `tile tile--${getStatusClass(status)}`;
-      tile.style.animationDelay = `${index * 0.02}s`;
-
-      if (!item) {
-        tile.classList.add("tile--disabled");
-      }
-
-      if (item && !matchesFilters(item, status)) {
-        tile.classList.add("tile--hidden");
-      }
-
-      if (currentId === id) {
-        tile.classList.add("tile--selected");
-      }
-
-      tile.innerHTML = `
-        <div class="tile__id">${id}</div>
-        <div class="tile__name">${item ? item.booth_name : "未登録"}</div>
-        <div class="tile__org">${item ? item.org_name : ""}</div>
-      `;
-
-      if (item) {
-        tile.title = `${item.booth_name} / ${getStatusLabel(status)}`;
-        tile.addEventListener("click", () => selectYatai(id));
-      }
-
-      track.appendChild(tile);
-    });
-
-    section.appendChild(header);
-    section.appendChild(track);
-
-    if (elements.areaFilter.value !== "all" && elements.areaFilter.value !== area) {
-      section.style.display = "none";
+    if (!item) {
+      tile.classList.add("tile--disabled");
     }
 
-    elements.canvas.appendChild(section);
+    if (item && !matchesFilters(item, status)) {
+      tile.classList.add("tile--hidden");
+    }
+
+    if (currentId === placement.id) {
+      tile.classList.add("tile--selected");
+    }
+
+    tile.innerHTML = `
+      <div class="tile__id">${placement.id}</div>
+      <div class="tile__name">${item ? item.booth_name : "未登録"}</div>
+      <div class="tile__org">${item ? item.org_name : ""}</div>
+    `;
+
+    if (item) {
+      tile.title = `${item.booth_name} / ${getStatusLabel(status)}`;
+      tile.addEventListener("click", () => selectYatai(placement.id));
+    }
+
+    elements.canvas.appendChild(tile);
   });
 
-  const campusAreas = Object.keys(CAMPUS_LAYOUTS[currentCampus].areas);
+  const campusAreas = CAMPUS_LAYOUTS[currentCampus].areas;
   const campusItems = yataiMaster.filter((item) => campusAreas.includes(item.area));
   const visibleCount = campusItems.filter((item) => matchesFilters(item, getStatus(item.yatai_id))).length;
   elements.totalCount.textContent = `${visibleCount}件 / 全${campusItems.length}件`;
@@ -1423,7 +1435,7 @@ function handleAdminSubmit(event) {
 
 function init() {
   loadStatusStore();
-  elements.areaCount.textContent = Object.keys(CAMPUS_LAYOUTS[currentCampus].areas).join(" / ");
+  elements.areaCount.textContent = CAMPUS_LAYOUTS[currentCampus].areas.join(" / ");
   renderMap();
 
   elements.search.addEventListener("input", renderMap);
@@ -1452,7 +1464,7 @@ function setCampus(next) {
   elements.tabHon.setAttribute("aria-selected", String(next === "hon"));
   elements.tabE.setAttribute("aria-selected", String(next === "e"));
   elements.areaFilter.value = "all";
-  elements.areaCount.textContent = Object.keys(CAMPUS_LAYOUTS[currentCampus].areas).join(" / ");
+  elements.areaCount.textContent = CAMPUS_LAYOUTS[currentCampus].areas.join(" / ");
   renderMap();
 }
 
