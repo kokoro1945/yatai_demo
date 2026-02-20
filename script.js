@@ -1305,14 +1305,11 @@ function renderMap() {
   elements.canvas.style.setProperty("--rows", GRID_ROWS);
   elements.canvas.style.setProperty("--cols", GRID_COLS);
 
-  renderAxisLabels();
-
   campus.placements.forEach((placement, index) => {
     const item = yataiMaster.find((yatai) => yatai.yatai_id === placement.id);
     const status = item ? getStatus(placement.id) : null;
     const tile = document.createElement("div");
     tile.className = `tile tile--${getStatusClass(status)}`;
-    tile.style.animationDelay = `${index * 0.01}s`;
     tile.style.gridRow = placement.row + 1;
     tile.style.gridColumn = placement.col + 1;
 
@@ -1349,23 +1346,6 @@ function renderMap() {
   elements.lastUpdated.textContent = formatDate(getLatestUpdated());
 }
 
-function renderAxisLabels() {
-  for (let row = 1; row <= GRID_ROWS; row += 1) {
-    const label = document.createElement("div");
-    label.className = "map-label map-label--row";
-    label.style.gridRow = row + 1;
-    label.textContent = ROWS[row - 1];
-    elements.canvas.appendChild(label);
-  }
-
-  for (let col = 1; col <= GRID_COLS; col += 1) {
-    const label = document.createElement("div");
-    label.className = "map-label map-label--col";
-    label.style.gridColumn = col + 1;
-    label.textContent = col;
-    elements.canvas.appendChild(label);
-  }
-}
 
 function getLatestUpdated() {
   const campusAreas = Object.keys(CAMPUS_LAYOUTS[currentCampus].areas);
