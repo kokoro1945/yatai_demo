@@ -202,13 +202,13 @@ body {
 
 .booth-map {
   position: relative;
-  min-height: 75vh;
+  height: 75vh;
+  max-height: 75vh;
   background: #fffdf8;
   border-radius: 18px;
   border: 1px solid rgba(30, 26, 18, 0.12);
   padding: 16px;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: auto;
 }
 
 .map-canvas {
@@ -222,6 +222,7 @@ body {
   min-width: calc(var(--cols) * var(--cell-size));
   min-height: calc(var(--rows) * var(--cell-size));
   width: max-content;
+  height: max-content;
 }
 
 .area-section {
