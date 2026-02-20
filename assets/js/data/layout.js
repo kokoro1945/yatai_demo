@@ -1,7 +1,9 @@
+// Map grid size (rows a-l, cols 1-37)
 export const GRID_ROWS = 12;
 export const GRID_COLS = 37;
 export const ROWS = "abcdefghijkl";
 
+// Build booth id ranges (e.g., A1..A10)
 const rangeIds = (prefix, start, end) => {
   const ids = [];
   for (let i = start; i <= end; i += 1) {
@@ -10,6 +12,7 @@ const rangeIds = (prefix, start, end) => {
   return ids;
 };
 
+// Parse cell notation like "a3" into row/col numbers
 const parseCell = (cell) => {
   const rowChar = cell[0].toLowerCase();
   const col = Number(cell.slice(1));
@@ -17,6 +20,7 @@ const parseCell = (cell) => {
   return { row, col };
 };
 
+// Build sequential placements between start/end for each id list
 const buildPlacements = (ranges) => {
   const placements = [];
   ranges.forEach(({ start, end, ids }) => {
@@ -35,6 +39,7 @@ const buildPlacements = (ranges) => {
   return placements;
 };
 
+// Campus-specific placement definitions
 export const CAMPUS_LAYOUTS = {
   hon: {
     name: "本キャン",

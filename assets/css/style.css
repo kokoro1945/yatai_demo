@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Shippori+Mincho:wght@600&display=swap");
 
+/* Theme tokens */
 :root {
   color-scheme: light;
   --bg: #f5efe4;
@@ -15,10 +16,12 @@
   --shadow: 0 16px 40px rgba(33, 24, 12, 0.12);
 }
 
+/* Base reset */
 * {
   box-sizing: border-box;
 }
 
+/* Prevent page-level horizontal scroll; map handles its own */
 html,
 body {
   margin: 0;
@@ -28,6 +31,7 @@ body {
   overflow-x: hidden;
 }
 
+/* Subtle background texture */
 .background-pattern {
   position: fixed;
   inset: 0;
@@ -37,6 +41,7 @@ body {
   z-index: -1;
 }
 
+/* Hero header */
 .hero {
   padding: 48px 8vw 24px;
 }
@@ -63,6 +68,7 @@ body {
   letter-spacing: 0.04em;
 }
 
+/* Summary cards */
 .hero__meta {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -88,6 +94,7 @@ body {
   font-weight: 700;
 }
 
+/* Main layout */
 .dashboard {
   display: grid;
   grid-template-columns: 1fr;
@@ -95,6 +102,7 @@ body {
   padding: 0 8vw 48px;
 }
 
+/* Panels */
 .panel {
   background: var(--panel);
   border-radius: 18px;
@@ -104,6 +112,7 @@ body {
   min-width: 0;
 }
 
+/* Panel header and controls */
 .panel__header {
   display: flex;
   flex-wrap: wrap;
@@ -113,12 +122,14 @@ body {
   margin-bottom: 16px;
 }
 
+/* Filters */
 .panel__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
 }
 
+/* Campus tabs */
 .campus-tabs {
   display: inline-flex;
   gap: 8px;
@@ -176,6 +187,7 @@ body {
   font-family: inherit;
 }
 
+/* Status legend */
 .legend {
   display: flex;
   flex-wrap: wrap;
@@ -203,6 +215,7 @@ body {
 .dot--green { background: var(--green); }
 .dot--gray { background: var(--gray); }
 
+/* Scrollable map container */
 .booth-map {
   position: relative;
   height: 75vh;
@@ -216,6 +229,7 @@ body {
   overflow: auto;
 }
 
+/* Grid map canvas */
 .map-canvas {
   position: relative;
   display: grid;
@@ -263,6 +277,7 @@ body {
   align-items: flex-start;
 }
 
+/* Single booth tile */
 .tile {
   width: 100%;
   min-height: 100%;
@@ -303,6 +318,7 @@ body {
   white-space: nowrap;
 }
 
+/* Selected booth */
 .tile--selected {
   outline: 3px solid var(--ink);
   outline-offset: -3px;
@@ -418,6 +434,7 @@ body {
   background: var(--accent-dark);
 }
 
+/* Footer */
 .footer {
   text-align: center;
   padding: 0 8vw 32px;

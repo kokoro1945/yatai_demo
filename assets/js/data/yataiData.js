@@ -1,3 +1,4 @@
+// Booth master data (last-year list). Organization/contact fields are empty.
 export const yataiMaster = [
   {
     yatai_id: "A1",

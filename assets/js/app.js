@@ -1,9 +1,11 @@
 import { GRID_ROWS, GRID_COLS, CAMPUS_LAYOUTS } from "./data/layout.js";
 import { yataiMaster } from "./data/yataiData.js";
 
+// Runtime configuration
 const ADMIN_EDIT_TOKEN = "ADMIN_EDIT_TOKEN";
 const STORAGE_KEY = "yatai_dashboard_status";
 
+// Default status values for booths that have no stored status
 const defaultStatus = {
   warn_count: 0,
   kenshoku: 1,
@@ -18,6 +20,7 @@ let statusStore = {};
 let currentId = null;
 let currentCampus = "hon";
 
+// DOM references
 const elements = {
   map: document.getElementById("booth-map"),
   canvas: document.getElementById("map-canvas"),
@@ -80,10 +83,12 @@ const detailElements = [
   "updatedBy"
 ];
 
+// Guard for optional detail panel (currently removed from UI)
 function hasDetailPanel() {
   return detailElements.every((key) => elements[key]);
 }
 
+// Local storage load
 function loadStatusStore() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return;
@@ -94,10 +99,12 @@ function loadStatusStore() {
   }
 }
 
+// Local storage save
 function saveStatusStore() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(statusStore));
 }
 
+// Merge default status with stored status
 function getStatus(id) {
   return {
     ...defaultStatus,
@@ -105,6 +112,7 @@ function getStatus(id) {
   };
 }
 
+// Status resolve (priority: STOP > DANGER > WARNING > UNCHECKED > OK)
 function resolveDisplayStatus(status) {
   if (!status) return "UNKNOWN";
   if (status.sales_allowed === 0) return "STOP";
@@ -114,6 +122,7 @@ function resolveDisplayStatus(status) {
   return "OK";
 }
 
+// Map resolved status to CSS class
 function getStatusClass(status) {
   const resolved = resolveDisplayStatus(status);
   switch (resolved) {
@@ -132,6 +141,7 @@ function getStatusClass(status) {
   }
 }
 
+// Map resolved status to label
 function getStatusLabel(status) {
   const resolved = resolveDisplayStatus(status);
   switch (resolved) {
@@ -150,6 +160,7 @@ function getStatusLabel(status) {
   }
 }
 
+// UI helper: format ISO datetime for display
 function formatDate(value) {
   if (!value) return "--";
   const date = new Date(value);
@@ -163,6 +174,7 @@ function formatDate(value) {
   });
 }
 
+// Apply text/area/status filters and campus filter
 function matchesFilters(item, status) {
   const keyword = elements.search.value.trim().toLowerCase();
   const area = elements.areaFilter.value;
@@ -182,6 +194,7 @@ function matchesFilters(item, status) {
   return inCampus && matchesArea && matchesKeyword && matchesStatus;
 }
 
+// Render grid map tiles for current campus
 function renderMap() {
   elements.canvas.innerHTML = "";
   const campus = CAMPUS_LAYOUTS[currentCampus];
@@ -229,6 +242,7 @@ function renderMap() {
   elements.lastUpdated.textContent = formatDate(getLatestUpdated());
 }
 
+// Latest updated_at within current campus
 function getLatestUpdated() {
   const campusAreas = CAMPUS_LAYOUTS[currentCampus].areas;
   const dates = yataiMaster
@@ -241,6 +255,7 @@ function getLatestUpdated() {
   return new Date(Math.max(...valid)).toISOString();
 }
 
+// Select a booth (no detail panel currently, but keeps selection)
 function selectYatai(id) {
   currentId = id;
   const item = yataiMaster.find((yatai) => yatai.yatai_id === id);
@@ -291,11 +306,13 @@ function selectYatai(id) {
   renderMap();
 }
 
+// Admin token gate
 function handleAdminToken() {
   const allowed = elements.adminToken.value === ADMIN_EDIT_TOKEN;
   elements.adminForm.hidden = !allowed;
 }
 
+// Admin status update (not used when detail panel hidden)
 function handleAdminSubmit(event) {
   event.preventDefault();
   if (!currentId) return;
@@ -315,6 +332,7 @@ function handleAdminSubmit(event) {
   selectYatai(currentId);
 }
 
+// Campus tab switcher
 function setCampus(next) {
   if (!CAMPUS_LAYOUTS[next]) return;
   currentCampus = next;
@@ -327,6 +345,7 @@ function setCampus(next) {
   renderMap();
 }
 
+// Boot
 function init() {
   loadStatusStore();
   elements.areaCount.textContent = CAMPUS_LAYOUTS[currentCampus].areas.join(" / ");
