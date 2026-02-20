@@ -179,6 +179,12 @@ body {
 .booth-map {
   display: grid;
   gap: 18px;
+  grid-template-columns: repeat(6, minmax(120px, 1fr));
+  grid-template-areas:
+    "a a l l l l"
+    "b b h j k k"
+    "c d e f g i";
+  grid-auto-rows: minmax(120px, auto);
 }
 
 .area-section {
@@ -186,6 +192,7 @@ body {
   border-radius: 16px;
   padding: 12px 14px;
   border: 1px solid rgba(30, 26, 18, 0.08);
+  min-width: 0;
 }
 
 .area-header {
@@ -239,11 +246,17 @@ body {
 .tile__name {
   font-size: 0.85rem;
   color: rgba(30, 26, 18, 0.7);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tile__org {
   font-size: 0.75rem;
   color: rgba(30, 26, 18, 0.5);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tile--selected {
@@ -370,6 +383,10 @@ body {
 @media (max-width: 980px) {
   .dashboard {
     grid-template-columns: 1fr;
+  }
+  .booth-map {
+    grid-template-columns: 1fr;
+    grid-template-areas: none;
   }
 }
 

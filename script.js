@@ -2,66 +2,1073 @@ const ADMIN_EDIT_TOKEN = "ADMIN_EDIT_TOKEN";
 const STORAGE_KEY = "yatai_dashboard_status";
 
 const LAYOUT = {
-  A: { direction: "row", ids: ["A01", "A02", "A03", "A04"] },
-  B: { direction: "col", ids: ["B01", "B02", "B03", "B04"] },
-  C: { direction: "col", ids: ["C01", "C02", "C03", "C04", "C05"] },
-  D: { direction: "row", ids: ["D01", "D02", "D03", "D04", "D05"] }
+  A: { direction: "row", ids: ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"] },
+  B: { direction: "col", ids: ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10"] },
+  C: { direction: "col", ids: ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10"] },
+  D: { direction: "row", ids: ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10"] },
+  E: { direction: "row", ids: ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10", "E11", "E12", "E13"] },
+  F: { direction: "row", ids: ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"] },
+  G: { direction: "col", ids: ["G1", "G2", "G3", "G4", "G5", "G6"] },
+  H: { direction: "col", ids: ["H1", "H2", "H3", "H4", "H5"] },
+  I: { direction: "col", ids: ["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9"] },
+  J: { direction: "row", ids: ["J1", "J2", "J3", "J4", "J5"] },
+  K: { direction: "row", ids: ["K1", "K2", "K3", "K4", "K5", "K6", "K7", "K8", "K9", "K10", "K11", "K12"] },
+  L: { direction: "row", ids: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10", "L11", "L12", "L13", "L14", "L15"] }
 };
 
 const yataiMaster = [
   {
-    yatai_id: "A01",
+    yatai_id: "A1",
     area: "A",
-    org_name: "軽音楽研究会",
-    booth_name: "スパイスカレー屋台",
-    menu_json: JSON.stringify(["チキンカレー", "バターチキン", "ラッシー"]),
-    leader_name: "佐藤 玲奈",
-    leader_phone: "090-1234-5678"
+    org_name: "",
+    booth_name: "GGクロッフル",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
   },
   {
-    yatai_id: "A02",
+    yatai_id: "A2",
     area: "A",
-    org_name: "漫画研究会",
-    booth_name: "もちもち団子",
-    menu_json: JSON.stringify(["みたらし", "黒蜜きなこ", "いちご"]),
-    leader_name: "高橋 悠斗",
-    leader_phone: "090-9876-5432"
+    org_name: "",
+    booth_name: "ジャンボフランクフルト",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
   },
   {
-    yatai_id: "B01",
+    yatai_id: "A3",
+    area: "A",
+    org_name: "",
+    booth_name: "花より団子",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "A4",
+    area: "A",
+    org_name: "",
+    booth_name: "トッポギハウス",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "A5",
+    area: "A",
+    org_name: "",
+    booth_name: "フランク信江❤️",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "A6",
+    area: "A",
+    org_name: "",
+    booth_name: "近響が奏でるベビーカステるん",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "A7",
+    area: "A",
+    org_name: "",
+    booth_name: "たこせん屋",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "A8",
+    area: "A",
+    org_name: "",
+    booth_name: "ローバー焼き鳥",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "A9",
+    area: "A",
+    org_name: "",
+    booth_name: "510雑貨店",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "A10",
+    area: "A",
+    org_name: "",
+    booth_name: "土木のおいも",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "B1",
     area: "B",
-    org_name: "写真部",
-    booth_name: "レモネードスタンド",
-    menu_json: JSON.stringify(["レモネード", "レモンスカッシュ", "ミントソーダ"]),
-    leader_name: "小林 葵",
-    leader_phone: "080-2222-3333"
+    org_name: "",
+    booth_name: "覇王樹座たこ焼きぶ",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
   },
   {
-    yatai_id: "B02",
+    yatai_id: "B2",
     area: "B",
-    org_name: "茶道部",
-    booth_name: "抹茶たい焼き",
-    menu_json: JSON.stringify(["抹茶たい焼き", "ほうじ茶ラテ", "白玉ぜんざい"]),
-    leader_name: "松田 颯",
-    leader_phone: "080-4444-5555"
+    org_name: "",
+    booth_name: "フェスチキ",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
   },
   {
-    yatai_id: "C01",
-    area: "C",
-    org_name: "ダンスサークル",
-    booth_name: "ガーリックシュリンプ",
-    menu_json: JSON.stringify(["シュリンプ", "ライスボウル", "ハーブティー"]),
-    leader_name: "田中 美空",
-    leader_phone: "070-1111-2222"
+    yatai_id: "B3",
+    area: "B",
+    org_name: "",
+    booth_name: "布施ラボ スイーツ部",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
   },
   {
-    yatai_id: "C02",
+    yatai_id: "B4",
+    area: "B",
+    org_name: "",
+    booth_name: "つっちーの激うまミニ揚げパン",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "B5",
+    area: "B",
+    org_name: "",
+    booth_name: "陶龍包",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "B6",
+    area: "B",
+    org_name: "",
+    booth_name: "瞬たこFLASH",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "B7",
+    area: "B",
+    org_name: "",
+    booth_name: "爆裂⭐ ️ポップ道",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "B8",
+    area: "B",
+    org_name: "",
+    booth_name: "ふみちゃんのポップコーン畑",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "B9",
+    area: "B",
+    org_name: "",
+    booth_name: "川村ゼミプロデュースパリパリウインナー",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "B10",
+    area: "B",
+    org_name: "",
+    booth_name: "行列のできる渡辺フランクフルト",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "C1",
     area: "C",
-    org_name: "天文研究会",
-    booth_name: "星空クレープ",
-    menu_json: JSON.stringify(["チョコバナナ", "ストロベリー", "月見クレープ"]),
-    leader_name: "斉藤 誠",
-    leader_phone: "070-3333-4444"
+    org_name: "",
+    booth_name: "トリカワ",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "C2",
+    area: "C",
+    org_name: "",
+    booth_name: "あるま de たまごせんべい",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "C3",
+    area: "C",
+    org_name: "",
+    booth_name: "箏林堂",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "C4",
+    area: "C",
+    org_name: "",
+    booth_name: "熱三明治男",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "C5",
+    area: "C",
+    org_name: "",
+    booth_name: "林ゼミのあったか1杯",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "C6",
+    area: "C",
+    org_name: "",
+    booth_name: "サイクルドッグ",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "C7",
+    area: "C",
+    org_name: "",
+    booth_name: "肉とは",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "C8",
+    area: "C",
+    org_name: "",
+    booth_name: "近フル",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "C9",
+    area: "C",
+    org_name: "",
+    booth_name: "つるっとわかめうどん",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "C10",
+    area: "C",
+    org_name: "",
+    booth_name: "ゆず風味牛すじうどん",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "D1",
+    area: "D",
+    org_name: "",
+    booth_name: "ギョギョそば〜魚の音読みはウォウォ〜",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "D2",
+    area: "D",
+    org_name: "",
+    booth_name: "能登のよみがえりトート",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "D3",
+    area: "D",
+    org_name: "",
+    booth_name: "大人の屋台",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "D4",
+    area: "D",
+    org_name: "",
+    booth_name: "金さんの韓国おでん",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "D5",
+    area: "D",
+    org_name: "",
+    booth_name: "酸いも甘イモ〜青春味〜",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "D6",
+    area: "D",
+    org_name: "",
+    booth_name: "焼きとりさ",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "D7",
+    area: "D",
+    org_name: "",
+    booth_name: "石村よりたいを込めて",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "D8",
+    area: "D",
+    org_name: "",
+    booth_name: "福岡製麺",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "D9",
+    area: "D",
+    org_name: "",
+    booth_name: "イカ焼き研究所",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "D10",
+    area: "D",
+    org_name: "",
+    booth_name: "アゲアゲ↑↑パンっ！！スターズ⭐ ️",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "E1",
+    area: "E",
+    org_name: "",
+    booth_name: "もっふるん♪",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "E2",
+    area: "E",
+    org_name: "",
+    booth_name: "ふらっとフランクフルト",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "E3",
+    area: "E",
+    org_name: "",
+    booth_name: "もちるんとん",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "E4",
+    area: "E",
+    org_name: "",
+    booth_name: "うまそうなもんやっ豚汁",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "E5",
+    area: "E",
+    org_name: "",
+    booth_name: "ホルモンクエソバ",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "E6",
+    area: "E",
+    org_name: "",
+    booth_name: "JAGAR HITODSHI⭐ ️#じゃがバタ界隈",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "E7",
+    area: "E",
+    org_name: "",
+    booth_name: "潜水食堂ソーキそば",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "E8",
+    area: "E",
+    org_name: "",
+    booth_name: "はしまきのはまーず",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "E9",
+    area: "E",
+    org_name: "",
+    booth_name: "あったか〜いはらパインパンケーキ",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "E10",
+    area: "E",
+    org_name: "",
+    booth_name: "フランクフルト屋さん",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "E11",
+    area: "E",
+    org_name: "",
+    booth_name: "ブロッ子特製ベビーカステラ",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "E12",
+    area: "E",
+    org_name: "",
+    booth_name: "ガラス造形ゼミ",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "E13",
+    area: "E",
+    org_name: "",
+    booth_name: "二刀流蛸焼き",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "F1",
+    area: "F",
+    org_name: "",
+    booth_name: "宇宙 de シチュー営業中",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "F2",
+    area: "F",
+    org_name: "",
+    booth_name: "錦起文藝",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "F3",
+    area: "F",
+    org_name: "",
+    booth_name: "電研バーガー",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "F4",
+    area: "F",
+    org_name: "",
+    booth_name: "布施ラボ コスメ開発部",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "F5",
+    area: "F",
+    org_name: "",
+    booth_name: "さとしのポップコーン",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "F6",
+    area: "F",
+    org_name: "",
+    booth_name: "Airうどん",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "F7",
+    area: "F",
+    org_name: "",
+    booth_name: "ギョーザマン〜ドリンを添えて〜",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "F8",
+    area: "F",
+    org_name: "",
+    booth_name: "チュロス屋さん",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "F9",
+    area: "F",
+    org_name: "",
+    booth_name: "探検焼きそば隊",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "F10",
+    area: "F",
+    org_name: "",
+    booth_name: "Nuclear童話標本室",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "F11",
+    area: "F",
+    org_name: "",
+    booth_name: "わたあめ三郎",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "F12",
+    area: "F",
+    org_name: "",
+    booth_name: "みるせん at UNIONE",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "G1",
+    area: "G",
+    org_name: "",
+    booth_name: "Hot ひといき",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "G2",
+    area: "G",
+    org_name: "",
+    booth_name: "今夜焼きたいのは餃子か、貴方の未練か。",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "G3",
+    area: "G",
+    org_name: "",
+    booth_name: "SEMBA DOGG",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "G4",
+    area: "G",
+    org_name: "",
+    booth_name: "ハリケーン！！ポテト⭐ ️",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "G5",
+    area: "G",
+    org_name: "",
+    booth_name: "やきそば大将",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "G6",
+    area: "G",
+    org_name: "",
+    booth_name: "豚々",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "H1",
+    area: "H",
+    org_name: "",
+    booth_name: "いか一家 Final",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "H2",
+    area: "H",
+    org_name: "",
+    booth_name: "変草屋",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "H3",
+    area: "H",
+    org_name: "",
+    booth_name: "揚げ今川焼き",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "H4",
+    area: "H",
+    org_name: "",
+    booth_name: "カイグン ヘイチョウガ ヤク ヤキトリ（正しい表記は韓国語）",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "H5",
+    area: "H",
+    org_name: "",
+    booth_name: "亜留満流小籠包",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "I1",
+    area: "I",
+    org_name: "",
+    booth_name: "イラゼミ屋",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "I2",
+    area: "I",
+    org_name: "",
+    booth_name: "タカミのウマウマたません",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "I3",
+    area: "I",
+    org_name: "",
+    booth_name: "文デザストア",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "I4",
+    area: "I",
+    org_name: "",
+    booth_name: "のりちゃん焼きそば",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "I5",
+    area: "I",
+    org_name: "",
+    booth_name: "ソーセージ焼き屋さん",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "I6",
+    area: "I",
+    org_name: "",
+    booth_name: "辛聞トッポギ",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "I7",
+    area: "I",
+    org_name: "",
+    booth_name: "高原パスタ",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "I8",
+    area: "I",
+    org_name: "",
+    booth_name: "パクッとパラチュロ！",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "I9",
+    area: "I",
+    org_name: "",
+    booth_name: "揚げパン工房田中堂",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "J1",
+    area: "J",
+    org_name: "",
+    booth_name: "〜おでんに候〜衣笠ゼミパビリオン",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "J2",
+    area: "J",
+    org_name: "",
+    booth_name: "モ〜烈！！鉄板'sシェフ",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "J3",
+    area: "J",
+    org_name: "",
+    booth_name: "ギョさこい乱舞",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "J4",
+    area: "J",
+    org_name: "",
+    booth_name: "100円揚げ餃子屋〜味と安さとetc.〜",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "J5",
+    area: "J",
+    org_name: "",
+    booth_name: "揚げ物の活学",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "K1",
+    area: "K",
+    org_name: "",
+    booth_name: "揚げパン屋さん",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "K2",
+    area: "K",
+    org_name: "",
+    booth_name: "ポップコーン論I",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "K3",
+    area: "K",
+    org_name: "",
+    booth_name: "激甘リカバリーたい焼き",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "K4",
+    area: "K",
+    org_name: "",
+    booth_name: "Spi's kitchen 2",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "K5",
+    area: "K",
+    org_name: "",
+    booth_name: "MORI✖ ️MAI",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "K6",
+    area: "K",
+    org_name: "",
+    booth_name: "なぶちのひとくち",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "K7",
+    area: "K",
+    org_name: "",
+    booth_name: "くろっふる日和",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "K8",
+    area: "K",
+    org_name: "",
+    booth_name: "YABAちゃん魂のIPPON PON PON",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "K9",
+    area: "K",
+    org_name: "",
+    booth_name: "中華ネギネギ餅屋",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "K10",
+    area: "K",
+    org_name: "",
+    booth_name: "チュロス",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "K11",
+    area: "K",
+    org_name: "",
+    booth_name: "ふみくんのチュロすてないで！",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "K12",
+    area: "K",
+    org_name: "",
+    booth_name: "揚げぽよ",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L1",
+    area: "L",
+    org_name: "",
+    booth_name: "揚げパン屋さん",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L2",
+    area: "L",
+    org_name: "",
+    booth_name: "池田家の豚汁",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L3",
+    area: "L",
+    org_name: "",
+    booth_name: "DYE's Chicken Burger",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L4",
+    area: "L",
+    org_name: "",
+    booth_name: "ニア教授のとうもろこし屋さん",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L5",
+    area: "L",
+    org_name: "",
+    booth_name: "揚げパン",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L6",
+    area: "L",
+    org_name: "",
+    booth_name: "ISHI'sキッチン",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L7",
+    area: "L",
+    org_name: "",
+    booth_name: "マンゴーわたがし",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L8",
+    area: "L",
+    org_name: "",
+    booth_name: "来世もきっと思い出す唐沢ポテ子",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L9",
+    area: "L",
+    org_name: "",
+    booth_name: "BOLEの餃子 記は韓国語）",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L10",
+    area: "L",
+    org_name: "",
+    booth_name: "Lucky Potato",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L11",
+    area: "L",
+    org_name: "",
+    booth_name: "ふぞろいチップス",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L12",
+    area: "L",
+    org_name: "",
+    booth_name: "つるん。",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L13",
+    area: "L",
+    org_name: "",
+    booth_name: "焼きうどんJAPAN",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L14",
+    area: "L",
+    org_name: "",
+    booth_name: "生駒フランク本店",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
+  },
+  {
+    yatai_id: "L15",
+    area: "L",
+    org_name: "",
+    booth_name: "「あの」わたがし",
+    menu_json: "[]",
+    leader_name: "",
+    leader_phone: ""
   }
 ];
 
@@ -85,6 +1092,7 @@ const elements = {
   statusFilter: document.getElementById("status-filter"),
   totalCount: document.getElementById("total-count"),
   lastUpdated: document.getElementById("last-updated"),
+  areaCount: document.getElementById("area-count"),
   detailSubtitle: document.getElementById("detail-subtitle"),
   detailStatus: document.getElementById("detail-status"),
   detailId: document.getElementById("detail-id"),
@@ -212,6 +1220,7 @@ function renderMap() {
   Object.entries(LAYOUT).forEach(([area, config]) => {
     const section = document.createElement("section");
     section.className = "area-section";
+    section.style.gridArea = area.toLowerCase();
 
     const header = document.createElement("div");
     header.className = "area-header";
@@ -225,7 +1234,7 @@ function renderMap() {
       const status = item ? getStatus(id) : null;
       const tile = document.createElement("div");
       tile.className = `tile tile--${getStatusClass(status)}`;
-      tile.style.animationDelay = `${index * 0.03}s`;
+      tile.style.animationDelay = `${index * 0.02}s`;
 
       if (!item) {
         tile.classList.add("tile--disabled");
@@ -246,7 +1255,7 @@ function renderMap() {
       `;
 
       if (item) {
-        tile.title = `${item.org_name} / ${getStatusLabel(status)}`;
+        tile.title = `${item.booth_name} / ${getStatusLabel(status)}`;
         tile.addEventListener("click", () => selectYatai(id));
       }
 
@@ -287,18 +1296,24 @@ function selectYatai(id) {
   elements.detailStatus.className = `status-chip status-chip--${getStatusClass(status)}`;
   elements.detailId.textContent = item.yatai_id;
   elements.detailArea.textContent = item.area;
-  elements.detailOrg.textContent = item.org_name;
+  elements.detailOrg.textContent = item.org_name || "--";
   elements.detailBooth.textContent = item.booth_name;
-  elements.detailLeader.textContent = item.leader_name;
-  elements.detailPhone.textContent = item.leader_phone;
+  elements.detailLeader.textContent = item.leader_name || "--";
+  elements.detailPhone.textContent = item.leader_phone || "--";
 
   elements.detailMenu.innerHTML = "";
   const menu = JSON.parse(item.menu_json || "[]");
-  menu.forEach((entry) => {
+  if (!menu.length) {
     const li = document.createElement("li");
-    li.textContent = entry;
+    li.textContent = "未登録";
     elements.detailMenu.appendChild(li);
-  });
+  } else {
+    menu.forEach((entry) => {
+      const li = document.createElement("li");
+      li.textContent = entry;
+      elements.detailMenu.appendChild(li);
+    });
+  }
 
   elements.detailWarn.textContent = `${status.warn_count}件`;
   elements.detailKenshoku.textContent = status.kenshoku ? "完了" : "未完了";
@@ -343,6 +1358,7 @@ function handleAdminSubmit(event) {
 
 function init() {
   loadStatusStore();
+  elements.areaCount.textContent = Object.keys(LAYOUT).join(" / ");
   renderMap();
 
   elements.search.addEventListener("input", renderMap);
