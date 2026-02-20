@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "./lib/supabase";
+import { isSupabaseConfigured, supabase } from "./lib/supabase";
 import { BoothMap } from "./components/BoothMap";
 import { StatusLegend } from "./components/StatusLegend";
 import { CAMPUS_LAYOUTS } from "./data/layout";
@@ -98,6 +98,10 @@ function App() {
 
   useEffect(() => {
     const init = async () => {
+      if (!supabase) {
+        setLoading(false);
+        return;
+      }
       const { data } = await supabase.auth.getSession();
       const session = data.session;
       setUserId(session?.user.id ?? null);
@@ -175,6 +179,7 @@ function App() {
   };
 
   const fetchProfile = async (id: string) => {
+    if (!supabase) return;
     const { data, error } = await supabase
       .from("profiles")
       .select("id, role, area")
@@ -191,6 +196,7 @@ function App() {
   };
 
   const fetchBoothData = async () => {
+    if (!supabase) return;
     setDataLoading(true);
     setDataError(null);
 
@@ -244,6 +250,7 @@ function App() {
   const handleSignIn = async (event: React.FormEvent) => {
     event.preventDefault();
     setAuthError(null);
+    if (!supabase) return;
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password
@@ -256,6 +263,7 @@ function App() {
 
   const handleSignOut = async () => {
     setAuthError(null);
+    if (!supabase) return;
     await supabase.auth.signOut();
   };
 
@@ -278,6 +286,15 @@ function App() {
       <div className="app">
         <div className="card">
           <h1>屋台部ダッシュボード</h1>
+          {!isSupabaseConfigured && (
+            <div className="error">
+              Supabaseの環境変数が見つかりません。<br />
+              GitHub ActionsのSecretsに
+              <code>VITE_SUPABASE_URL</code> と
+              <code>VITE_SUPABASE_ANON_KEY</code>
+              を設定して再デプロイしてください。
+            </div>
+          )}
           <p className="muted">ログインが必要です。</p>
           <form onSubmit={handleSignIn} className="form">
             <label className="field">
