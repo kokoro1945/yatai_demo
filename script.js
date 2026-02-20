@@ -1,6 +1,13 @@
 const ADMIN_EDIT_TOKEN = "ADMIN_EDIT_TOKEN";
 const STORAGE_KEY = "yatai_dashboard_status";
 
+const LAYOUT = {
+  A: { direction: "row", ids: ["A01", "A02", "A03", "A04"] },
+  B: { direction: "col", ids: ["B01", "B02", "B03", "B04"] },
+  C: { direction: "col", ids: ["C01", "C02", "C03", "C04", "C05"] },
+  D: { direction: "row", ids: ["D01", "D02", "D03", "D04", "D05"] }
+};
+
 const yataiMaster = [
   {
     yatai_id: "A01",
@@ -65,16 +72,17 @@ const defaultStatus = {
   sales_allowed: 1,
   memo_today: "",
   updated_at: new Date().toISOString(),
-  updated_by: "本部 初期" 
+  updated_by: "本部 初期"
 };
 
 let statusStore = {};
 let currentId = null;
 
 const elements = {
-  grid: document.getElementById("yatai-grid"),
+  map: document.getElementById("booth-map"),
   search: document.getElementById("search"),
   areaFilter: document.getElementById("area-filter"),
+  statusFilter: document.getElementById("status-filter"),
   totalCount: document.getElementById("total-count"),
   lastUpdated: document.getElementById("last-updated"),
   detailSubtitle: document.getElementById("detail-subtitle"),
@@ -123,20 +131,49 @@ function getStatus(id) {
   };
 }
 
+function resolveDisplayStatus(status) {
+  if (!status) return "UNKNOWN";
+  if (status.sales_allowed === 0) return "STOP";
+  if (status.warn_count >= 2) return "DANGER";
+  if (status.warn_count === 1) return "WARNING";
+  if (status.gas_check === 0 || status.kenshoku === 0) return "UNCHECKED";
+  return "OK";
+}
+
 function getStatusClass(status) {
-  if (status.gas_check === 0 || status.kenshoku === 0) return "gray";
-  if (status.sales_allowed === 0) return "red";
-  if (status.warn_count >= 2) return "orange";
-  if (status.warn_count === 1) return "yellow";
-  return "green";
+  const resolved = resolveDisplayStatus(status);
+  switch (resolved) {
+    case "STOP":
+      return "red";
+    case "DANGER":
+      return "orange";
+    case "WARNING":
+      return "yellow";
+    case "UNCHECKED":
+      return "gray";
+    case "OK":
+      return "green";
+    default:
+      return "gray";
+  }
 }
 
 function getStatusLabel(status) {
-  if (status.gas_check === 0 || status.kenshoku === 0) return "確認未完了";
-  if (status.sales_allowed === 0) return "販売停止";
-  if (status.warn_count >= 2) return "警告2以上";
-  if (status.warn_count === 1) return "警告1";
-  return "正常";
+  const resolved = resolveDisplayStatus(status);
+  switch (resolved) {
+    case "STOP":
+      return "販売停止";
+    case "DANGER":
+      return "警告2以上";
+    case "WARNING":
+      return "警告1";
+    case "UNCHECKED":
+      return "確認未完了";
+    case "OK":
+      return "正常";
+    default:
+      return "未登録";
+  }
 }
 
 function formatDate(value) {
@@ -152,41 +189,82 @@ function formatDate(value) {
   });
 }
 
-function renderGrid() {
+function matchesFilters(item, status) {
   const keyword = elements.search.value.trim().toLowerCase();
   const area = elements.areaFilter.value;
+  const statusFilter = elements.statusFilter.value;
 
-  const filtered = yataiMaster.filter((item) => {
-    const matchesArea = area === "all" || item.area === area;
-    const matchesKeyword = [
-      item.yatai_id,
-      item.org_name,
-      item.booth_name
-    ].some((text) => text.toLowerCase().includes(keyword));
-    return matchesArea && matchesKeyword;
+  const matchesArea = area === "all" || item.area === area;
+  const matchesKeyword = [
+    item.yatai_id,
+    item.org_name,
+    item.booth_name
+  ].some((text) => text.toLowerCase().includes(keyword));
+  const statusKey = resolveDisplayStatus(status);
+  const matchesStatus = statusFilter === "all" || statusKey === statusFilter;
+
+  return matchesArea && matchesKeyword && matchesStatus;
+}
+
+function renderMap() {
+  elements.map.innerHTML = "";
+
+  Object.entries(LAYOUT).forEach(([area, config]) => {
+    const section = document.createElement("section");
+    section.className = "area-section";
+
+    const header = document.createElement("div");
+    header.className = "area-header";
+    header.innerHTML = `<span>${area} エリア</span><span>${config.ids.length}ブロック</span>`;
+
+    const track = document.createElement("div");
+    track.className = `area-track area-track--${config.direction}`;
+
+    config.ids.forEach((id, index) => {
+      const item = yataiMaster.find((yatai) => yatai.yatai_id === id);
+      const status = item ? getStatus(id) : null;
+      const tile = document.createElement("div");
+      tile.className = `tile tile--${getStatusClass(status)}`;
+      tile.style.animationDelay = `${index * 0.03}s`;
+
+      if (!item) {
+        tile.classList.add("tile--disabled");
+      }
+
+      if (item && !matchesFilters(item, status)) {
+        tile.classList.add("tile--hidden");
+      }
+
+      if (currentId === id) {
+        tile.classList.add("tile--selected");
+      }
+
+      tile.innerHTML = `
+        <div class="tile__id">${id}</div>
+        <div class="tile__name">${item ? item.booth_name : "未登録"}</div>
+        <div class="tile__org">${item ? item.org_name : ""}</div>
+      `;
+
+      if (item) {
+        tile.title = `${item.org_name} / ${getStatusLabel(status)}`;
+        tile.addEventListener("click", () => selectYatai(id));
+      }
+
+      track.appendChild(tile);
+    });
+
+    section.appendChild(header);
+    section.appendChild(track);
+
+    if (elements.areaFilter.value !== "all" && elements.areaFilter.value !== area) {
+      section.style.display = "none";
+    }
+
+    elements.map.appendChild(section);
   });
 
-  elements.grid.innerHTML = "";
-  filtered.forEach((item, index) => {
-    const status = getStatus(item.yatai_id);
-    const statusClass = getStatusClass(status);
-    const card = document.createElement("article");
-    card.className = `card card--${statusClass}`;
-    card.style.animationDelay = `${index * 0.03}s`;
-    card.innerHTML = `
-      <span class="card__tag">${item.area}エリア</span>
-      <h3 class="card__title">${item.booth_name}</h3>
-      <p class="card__subtitle">${item.org_name}</p>
-      <div class="card__meta">
-        <span>${item.yatai_id}</span>
-        <span>${getStatusLabel(status)}</span>
-      </div>
-    `;
-    card.addEventListener("click", () => selectYatai(item.yatai_id));
-    elements.grid.appendChild(card);
-  });
-
-  elements.totalCount.textContent = `${filtered.length}件 / 全${yataiMaster.length}件`;
+  const visibleCount = yataiMaster.filter((item) => matchesFilters(item, getStatus(item.yatai_id))).length;
+  elements.totalCount.textContent = `${visibleCount}件 / 全${yataiMaster.length}件`;
   elements.lastUpdated.textContent = formatDate(getLatestUpdated());
 }
 
@@ -236,7 +314,7 @@ function selectYatai(id) {
   elements.memo.value = status.memo_today;
   elements.updatedBy.value = status.updated_by;
 
-  renderGrid();
+  renderMap();
 }
 
 function handleAdminToken() {
@@ -265,14 +343,17 @@ function handleAdminSubmit(event) {
 
 function init() {
   loadStatusStore();
-  renderGrid();
+  renderMap();
 
-  elements.search.addEventListener("input", renderGrid);
-  elements.areaFilter.addEventListener("change", renderGrid);
+  elements.search.addEventListener("input", renderMap);
+  elements.areaFilter.addEventListener("change", renderMap);
+  elements.statusFilter.addEventListener("change", renderMap);
   elements.adminToken.addEventListener("input", handleAdminToken);
   elements.adminForm.addEventListener("submit", handleAdminSubmit);
 
-  selectYatai(yataiMaster[0].yatai_id);
+  if (yataiMaster.length) {
+    selectYatai(yataiMaster[0].yatai_id);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", init);

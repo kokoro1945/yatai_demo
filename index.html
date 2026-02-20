@@ -49,6 +49,17 @@
               <option value="C">C</option>
             </select>
           </label>
+          <label class="field field--inline">
+            <span>状態</span>
+            <select id="status-filter">
+              <option value="all">全て</option>
+              <option value="STOP">販売停止</option>
+              <option value="DANGER">警告2以上</option>
+              <option value="WARNING">警告1</option>
+              <option value="UNCHECKED">確認未完了</option>
+              <option value="OK">正常</option>
+            </select>
+          </label>
         </div>
       </div>
 
@@ -56,11 +67,11 @@
         <div class="legend__item"><span class="dot dot--red"></span>販売停止</div>
         <div class="legend__item"><span class="dot dot--orange"></span>警告2以上</div>
         <div class="legend__item"><span class="dot dot--yellow"></span>警告1</div>
-        <div class="legend__item"><span class="dot dot--green"></span>正常</div>
         <div class="legend__item"><span class="dot dot--gray"></span>確認未完了</div>
+        <div class="legend__item"><span class="dot dot--green"></span>正常</div>
       </div>
 
-      <div class="grid" id="yatai-grid" aria-live="polite"></div>
+      <div class="booth-map" id="booth-map" aria-live="polite"></div>
     </section>
 
     <section class="panel panel--right" id="detail-panel" aria-live="polite">
