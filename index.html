@@ -1,99 +1,13 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>屋台管理ダッシュボード</title>
-  <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
-  <div class="background-pattern" aria-hidden="true"></div>
-  <header class="hero">
-    <div class="hero__badge">大学祭・本部用</div>
-    <h1>屋台管理ダッシュボード</h1>
-    <p class="hero__lead">屋台情報を一元管理し、当日の状態をリアルタイムに共有。</p>
-    <div class="hero__meta">
-      <div class="meta-card">
-        <span class="meta-card__label">対象エリア</span>
-        <span class="meta-card__value" id="area-count">A / B / C</span>
-      </div>
-      <div class="meta-card">
-        <span class="meta-card__label">登録屋台数</span>
-        <span class="meta-card__value" id="total-count">--</span>
-      </div>
-      <div class="meta-card">
-        <span class="meta-card__label">更新</span>
-        <span class="meta-card__value" id="last-updated">--</span>
-      </div>
-    </div>
-  </header>
-
-  <main class="dashboard">
-    <section class="panel panel--left">
-      <div class="panel__header">
-        <div>
-          <h2>屋台一覧</h2>
-          <p>状態に応じて色分けされます。</p>
-        </div>
-        <div class="campus-tabs" role="tablist" aria-label="キャンパス切替">
-          <button class="tab is-active" id="tab-hon" type="button" role="tab" aria-selected="true">本キャン</button>
-          <button class="tab" id="tab-e" type="button" role="tab" aria-selected="false">Eキャン</button>
-        </div>
-        <div class="panel__actions">
-          <label class="field field--inline">
-            <span>検索</span>
-            <input type="search" id="search" placeholder="屋台名・団体名・ID">
-          </label>
-          <label class="field field--inline">
-            <span>エリア</span>
-            <select id="area-filter">
-              <option value="all">全て</option>
-              <option value="A">A</option>
-              <option value="B">B</option>
-              <option value="C">C</option>
-              <option value="D">D</option>
-              <option value="E">E</option>
-              <option value="F">F</option>
-              <option value="G">G</option>
-              <option value="H">H</option>
-              <option value="I">I</option>
-              <option value="J">J</option>
-              <option value="K">K</option>
-              <option value="L">L</option>
-            </select>
-          </label>
-          <label class="field field--inline">
-            <span>状態</span>
-            <select id="status-filter">
-              <option value="all">全て</option>
-              <option value="STOP">販売停止</option>
-              <option value="DANGER">警告2以上</option>
-              <option value="WARNING">警告1</option>
-              <option value="UNCHECKED">確認未完了</option>
-              <option value="OK">正常</option>
-            </select>
-          </label>
-        </div>
-      </div>
-
-      <div class="legend">
-        <div class="legend__item"><span class="dot dot--red"></span>販売停止</div>
-        <div class="legend__item"><span class="dot dot--orange"></span>警告2以上</div>
-        <div class="legend__item"><span class="dot dot--yellow"></span>警告1</div>
-        <div class="legend__item"><span class="dot dot--gray"></span>確認未完了</div>
-        <div class="legend__item"><span class="dot dot--green"></span>正常</div>
-      </div>
-
-      <div class="booth-map" id="booth-map" aria-live="polite">
-        <div class="map-canvas" id="map-canvas"></div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <p>Repository パターンにより API / DB を差し替え可能な構成を想定しています。</p>
-  </footer>
-
-  <script type="module" src="assets/js/app.js"></script>
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vite-tmp</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
