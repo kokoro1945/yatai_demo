@@ -1,3 +1,20 @@
+# Yatai Dashboard (Vite + Supabase)
+
+## Deploy (GitHub Pages)
+- This project uses GitHub Actions to build and deploy.
+- Set repository secrets:
+  - `VITE_SUPABASE_URL`
+  - `VITE_SUPABASE_ANON_KEY`
+- Enable Pages:
+  - Settings → Pages → Source: GitHub Actions
+
+## Local setup
+Create `.env` from `.env.example`, then:
+```bash
+npm install
+npm run dev
+```
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
