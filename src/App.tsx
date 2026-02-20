@@ -51,6 +51,21 @@ const createDefaultStatuses = (booths: Booth[]) => {
   return statuses;
 };
 
+const mergeStatusRow = (prev: Record<string, BoothStatus>, row: BoothStatusRow | null) => {
+  if (!row) return prev;
+  const id = normalizeId(row.yatai_id);
+  return {
+    ...prev,
+    [id]: {
+      yatai_id: id,
+      warn_count: row.warn_count ?? 0,
+      kenshoku: row.kenshoku ?? false,
+      gas_check: row.gas_check ?? false,
+      sales_allowed: row.sales_allowed ?? false
+    }
+  };
+};
+
 function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -80,6 +95,7 @@ function App() {
       if (session?.user.id) {
         await fetchProfile(session.user.id);
         await fetchBoothData();
+        subscribeToStatus();
       }
       setLoading(false);
     };
@@ -90,10 +106,12 @@ function App() {
         if (session?.user.id) {
           await fetchProfile(session.user.id);
           await fetchBoothData();
+          subscribeToStatus();
         } else {
           setProfile(null);
           setBooths([]);
           setStatuses({});
+          unsubscribeFromStatus();
         }
       }
     );
@@ -102,8 +120,44 @@ function App() {
 
     return () => {
       authListener.subscription.unsubscribe();
+      unsubscribeFromStatus();
     };
   }, []);
+
+  let statusChannel: ReturnType<typeof supabase.channel> | null = null;
+
+  const subscribeToStatus = () => {
+    if (statusChannel) return;
+    statusChannel = supabase
+      .channel("booth-status-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "booth_status" },
+        (payload) => {
+          const row = payload.new as BoothStatusRow | null;
+          if (payload.eventType === "DELETE") {
+            const oldRow = payload.old as BoothStatusRow | null;
+            if (!oldRow) return;
+            const id = normalizeId(oldRow.yatai_id);
+            setStatuses((prev) => {
+              const next = { ...prev };
+              delete next[id];
+              return next;
+            });
+            return;
+          }
+          setStatuses((prev) => mergeStatusRow(prev, row));
+        }
+      )
+      .subscribe();
+  };
+
+  const unsubscribeFromStatus = () => {
+    if (statusChannel) {
+      supabase.removeChannel(statusChannel);
+      statusChannel = null;
+    }
+  };
 
   const fetchProfile = async (id: string) => {
     const { data, error } = await supabase
