@@ -1,19 +1,33 @@
 const ADMIN_EDIT_TOKEN = "ADMIN_EDIT_TOKEN";
 const STORAGE_KEY = "yatai_dashboard_status";
 
-const LAYOUT = {
-  A: { direction: "row", ids: ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"], x: 4, y: 4, width: 440 },
-  B: { direction: "col", ids: ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10"], x: 4, y: 130, width: 140 },
-  C: { direction: "col", ids: ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10"], x: 4, y: 300, width: 140 },
-  D: { direction: "row", ids: ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10"], x: 170, y: 330, width: 420 },
-  E: { direction: "row", ids: ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10", "E11", "E12", "E13"], x: 260, y: 220, width: 420 },
-  F: { direction: "row", ids: ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"], x: 420, y: 260, width: 380 },
-  G: { direction: "col", ids: ["G1", "G2", "G3", "G4", "G5", "G6"], x: 520, y: 360, width: 140 },
-  H: { direction: "col", ids: ["H1", "H2", "H3", "H4", "H5"], x: 360, y: 150, width: 140 },
-  I: { direction: "col", ids: ["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9"], x: 640, y: 360, width: 140 },
-  J: { direction: "row", ids: ["J1", "J2", "J3", "J4", "J5"], x: 500, y: 120, width: 260 },
-  K: { direction: "row", ids: ["K1", "K2", "K3", "K4", "K5", "K6", "K7", "K8", "K9", "K10", "K11", "K12"], x: 620, y: 140, width: 360 },
-  L: { direction: "row", ids: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10", "L11", "L12", "L13", "L14", "L15"], x: 560, y: 10, width: 420 }
+const CAMPUS_LAYOUTS = {
+  hon: {
+    name: "本キャン",
+    width: 820,
+    height: 320,
+    areas: {
+      A: { direction: "row", ids: ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"], x: 120, y: 10, width: 560 },
+      B: { direction: "col", ids: ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10"], x: 120, y: 90, width: 120 },
+      C: { direction: "col", ids: ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10"], x: 10, y: 10, width: 120 },
+      D: { direction: "row", ids: ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10"], x: 120, y: 190, width: 680 }
+    }
+  },
+  e: {
+    name: "Eキャン",
+    width: 900,
+    height: 360,
+    areas: {
+      L: { direction: "row", ids: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10", "L11", "L12", "L13", "L14", "L15"], x: 200, y: 10, width: 640 },
+      I: { direction: "col", ids: ["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9"], x: 200, y: 90, width: 120 },
+      F: { direction: "row", ids: ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"], x: 320, y: 140, width: 520 },
+      E: { direction: "row", ids: ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10", "E11", "E12", "E13"], x: 320, y: 210, width: 560 },
+      H: { direction: "row", ids: ["H1", "H2", "H3", "H4", "H5"], x: 40, y: 230, width: 220 },
+      G: { direction: "row", ids: ["G1", "G2", "G3", "G4", "G5", "G6"], x: 40, y: 280, width: 260 },
+      J: { direction: "row", ids: ["J1", "J2", "J3", "J4", "J5"], x: 520, y: 80, width: 260 },
+      K: { direction: "row", ids: ["K1", "K2", "K3", "K4", "K5", "K6", "K7", "K8", "K9", "K10", "K11", "K12"], x: 580, y: 110, width: 320 }
+    }
+  }
 };
 
 const yataiMaster = [
@@ -1084,10 +1098,13 @@ const defaultStatus = {
 
 let statusStore = {};
 let currentId = null;
+let currentCampus = "hon";
 
 const elements = {
   map: document.getElementById("booth-map"),
   canvas: document.getElementById("map-canvas"),
+  tabHon: document.getElementById("tab-hon"),
+  tabE: document.getElementById("tab-e"),
   search: document.getElementById("search"),
   areaFilter: document.getElementById("area-filter"),
   statusFilter: document.getElementById("status-filter"),
@@ -1202,7 +1219,9 @@ function matchesFilters(item, status) {
   const keyword = elements.search.value.trim().toLowerCase();
   const area = elements.areaFilter.value;
   const statusFilter = elements.statusFilter.value;
+  const campusAreas = Object.keys(CAMPUS_LAYOUTS[currentCampus].areas);
 
+  const inCampus = campusAreas.includes(item.area);
   const matchesArea = area === "all" || item.area === area;
   const matchesKeyword = [
     item.yatai_id,
@@ -1212,13 +1231,16 @@ function matchesFilters(item, status) {
   const statusKey = resolveDisplayStatus(status);
   const matchesStatus = statusFilter === "all" || statusKey === statusFilter;
 
-  return matchesArea && matchesKeyword && matchesStatus;
+  return inCampus && matchesArea && matchesKeyword && matchesStatus;
 }
 
 function renderMap() {
   elements.canvas.innerHTML = "";
+  const campus = CAMPUS_LAYOUTS[currentCampus];
+  elements.canvas.style.height = `${campus.height}px`;
+  elements.map.style.minHeight = `${campus.height + 32}px`;
 
-  Object.entries(LAYOUT).forEach(([area, config]) => {
+  Object.entries(campus.areas).forEach(([area, config]) => {
     const section = document.createElement("section");
     section.className = "area-section";
     section.style.left = `${config.x}px`;
@@ -1275,13 +1297,18 @@ function renderMap() {
     elements.canvas.appendChild(section);
   });
 
-  const visibleCount = yataiMaster.filter((item) => matchesFilters(item, getStatus(item.yatai_id))).length;
-  elements.totalCount.textContent = `${visibleCount}件 / 全${yataiMaster.length}件`;
+  const campusAreas = Object.keys(CAMPUS_LAYOUTS[currentCampus].areas);
+  const campusItems = yataiMaster.filter((item) => campusAreas.includes(item.area));
+  const visibleCount = campusItems.filter((item) => matchesFilters(item, getStatus(item.yatai_id))).length;
+  elements.totalCount.textContent = `${visibleCount}件 / 全${campusItems.length}件`;
   elements.lastUpdated.textContent = formatDate(getLatestUpdated());
 }
 
 function getLatestUpdated() {
-  const dates = yataiMaster.map((item) => getStatus(item.yatai_id).updated_at);
+  const campusAreas = Object.keys(CAMPUS_LAYOUTS[currentCampus].areas);
+  const dates = yataiMaster
+    .filter((item) => campusAreas.includes(item.area))
+    .map((item) => getStatus(item.yatai_id).updated_at);
   const valid = dates
     .map((value) => new Date(value).getTime())
     .filter((value) => !Number.isNaN(value));
@@ -1361,7 +1388,7 @@ function handleAdminSubmit(event) {
 
 function init() {
   loadStatusStore();
-  elements.areaCount.textContent = Object.keys(LAYOUT).join(" / ");
+  elements.areaCount.textContent = Object.keys(CAMPUS_LAYOUTS[currentCampus].areas).join(" / ");
   renderMap();
 
   elements.search.addEventListener("input", renderMap);
@@ -1370,9 +1397,24 @@ function init() {
   elements.adminToken.addEventListener("input", handleAdminToken);
   elements.adminForm.addEventListener("submit", handleAdminSubmit);
 
+  elements.tabHon.addEventListener("click", () => setCampus("hon"));
+  elements.tabE.addEventListener("click", () => setCampus("e"));
+
   if (yataiMaster.length) {
     selectYatai(yataiMaster[0].yatai_id);
   }
+}
+
+function setCampus(next) {
+  if (!CAMPUS_LAYOUTS[next]) return;
+  currentCampus = next;
+  elements.tabHon.classList.toggle("is-active", next === "hon");
+  elements.tabE.classList.toggle("is-active", next === "e");
+  elements.tabHon.setAttribute("aria-selected", String(next === "hon"));
+  elements.tabE.setAttribute("aria-selected", String(next === "e"));
+  elements.areaFilter.value = "all";
+  elements.areaCount.textContent = Object.keys(CAMPUS_LAYOUTS[currentCampus].areas).join(" / ");
+  renderMap();
 }
 
 document.addEventListener("DOMContentLoaded", init);
