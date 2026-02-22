@@ -2,12 +2,13 @@ import { useMemo } from "react";
 import type { Booth, BoothStatus } from "../types";
 import { CAMPUS_LAYOUTS, GRID_COLS, GRID_ROWS } from "../data/layout";
 
+// Map color priority for overall monitoring:
+// STOP > DANGER >=2 > WARNING =1 > OK
 const resolveDisplayStatus = (status?: BoothStatus) => {
   if (!status) return "UNKNOWN";
   if (!status.sales_allowed) return "STOP";
   if (status.warn_count >= 2) return "DANGER";
   if (status.warn_count === 1) return "WARNING";
-  if (!status.gas_check || !status.kenshoku) return "UNCHECKED";
   return "OK";
 };
 
@@ -15,7 +16,6 @@ const statusClassMap: Record<string, string> = {
   STOP: "tile--red",
   DANGER: "tile--orange",
   WARNING: "tile--yellow",
-  UNCHECKED: "tile--gray",
   OK: "tile--green",
   UNKNOWN: "tile--gray"
 };

@@ -71,7 +71,6 @@ const statusLabel = (status?: BoothStatus) => {
   if (!status.sales_allowed) return "販売停止";
   if (status.warn_count >= 2) return "警告2以上";
   if (status.warn_count === 1) return "警告1";
-  if (!status.gas_check || !status.kenshoku) return "確認未完了";
   return "正常";
 };
 
